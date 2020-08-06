@@ -10,11 +10,11 @@ namespace WebApplication.Models
     {
         [Display(Name = "顺序")]
         public int Position { get; set; }
-        [Url]
+        [Url(ErrorMessage = "图片已失效")]
         [Display(Name = "图片")]
         [Required(ErrorMessage = "请添加轮播图片")]
         public string ImageUrl { get; set; }
-        [Url]
+        [Url(ErrorMessage = "请输入正确的链接")]
         [Display(Name = "跳转链接")]
         public string Link { get; set; }
     }

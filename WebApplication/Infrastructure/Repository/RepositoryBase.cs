@@ -24,6 +24,10 @@ namespace WebApplication.Infrastructure
             _dbContext.Set<T>().Remove(entity);
         }
 
+        public async void SoftDelete (TId id)
+        {
+        }
+
         public Task<IEnumerable<T>> GetAllAsync()
         {
             return Task.FromResult(_dbContext.Set<T>().AsEnumerable());

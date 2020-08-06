@@ -20,5 +20,6 @@ namespace WebApplication.Infrastructure
     {
         Task<T> GetByIdAsync(TId id);
         Task<bool> IsExistAsync(TId id);
+        void SoftDelete(TId id);
     }
 }

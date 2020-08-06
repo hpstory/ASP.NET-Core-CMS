@@ -47,5 +47,18 @@ namespace WebApplication.Controllers
 
             return CreatedAtRoute(nameof(GetBannersAsync), new { bannersId = returnDto.ID }, returnDto);
         }
+
+        [HttpDelete("{bannersId}")]
+        public async Task<IActionResult> DeleteBannerAsync(int bannersId)
+        {
+            var entity = await _repositoryWrapper.Banners.GetByIdAsync(bannersId);
+            if(entity == null)
+            {
+                return NotFound();
+            }
+            _repositoryWrapper.Banners.Delete(entity);
+            await _repositoryWrapper.Banners.SaveAsync();
+            return NoContent();
+        }
     }
 }
