@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication.Entities
 {
@@ -10,6 +11,7 @@ namespace WebApplication.Entities
         public int Position { get; set; }
         public string ImageUrl { get; set; }
         public string Link { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime PublishTime { get; set; }
     }
 }

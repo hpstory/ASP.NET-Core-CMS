@@ -2,10 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication.Entities;
+using WebApplication.Infrastructure.Services;
 
 namespace WebApplication.Infrastructure
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
+        private IBannersRepository _bannersRepository = null;
+        public CMSDbContext _dbContext { get; }
+        public RepositoryWrapper(CMSDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+        public IBannersRepository Banners => _bannersRepository ?? new BannersRepository(_dbContext);
     }
 }
