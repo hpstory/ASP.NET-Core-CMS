@@ -11,7 +11,7 @@ using WebApplication.Models;
 namespace WebApplication.Controllers
 {
     [ApiController]
-    [Route("api/banners")]
+    [Route("api")]
     public class BannersController : ControllerBase
     {
         public IRepositoryWrapper _repositoryWrapper { get; }
@@ -28,7 +28,7 @@ namespace WebApplication.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet(Name = nameof(GetBannersAsync))]
+        [HttpGet("banners", Name = nameof(GetBannersAsync))]
         public async Task<ActionResult<IEnumerable<BannersDto>>> GetBannersAsync()
         {
             var entities = await _repositoryWrapper.Banners.GetAllAsync();
@@ -36,8 +36,8 @@ namespace WebApplication.Controllers
             return Ok(returnDto);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Banners>> CreateBannerAsync(BannersAddDto banner)
+        [HttpPost("banner")]
+        public async Task<ActionResult<Banners>> CreateBannerAsync(BannersAddOrUpdateDto banner)
         {
             var entity = _mapper.Map<Banners>(banner);
             _repositoryWrapper.Banners.Create(entity);
@@ -48,7 +48,7 @@ namespace WebApplication.Controllers
             return CreatedAtRoute(nameof(GetBannersAsync), new { bannersId = returnDto.ID }, returnDto);
         }
 
-        [HttpDelete("{bannerId}")]
+        [HttpDelete("banner/{bannerId}")]
         public async Task<IActionResult> DeleteBannerAsync(int bannerId)
         {
             var entity = await _repositoryWrapper.Banners.GetByIdAsync(bannerId);
@@ -60,16 +60,21 @@ namespace WebApplication.Controllers
             await _repositoryWrapper.Banners.SaveAsync();
             return NoContent();
         }
-        [HttpPut("{bannerId}")]
-        public async Task<ActionResult<BannersDto>> UpdateBannerAsync(BannersDto banner)
+        [HttpPut("banner/{bannerId}")]
+        public async Task<ActionResult<BannersDto>> UpdateBannerAsync(int bannerId, BannersAddOrUpdateDto banner)
         {
-            var entity = await _repositoryWrapper.Banners.GetByIdAsync(banner.ID);
+            var entity = await _repositoryWrapper.Banners.GetByIdAsync(bannerId);
             if (entity == null)
             {
-                return NotFound();
+                var addBanner = _mapper.Map<Banners>(banner);
+                _repositoryWrapper.Banners.Create(addBanner);
+                await _repositoryWrapper.Banners.SaveAsync();
+                
+                var returnDto = _mapper.Map<BannersDto>(addBanner);
+                return CreatedAtRoute(nameof(GetBannersAsync), new { bannersId = returnDto.ID }, returnDto);
             }
-            var result = _mapper.Map<Banners>(banner);
-            _repositoryWrapper.Banners.Update(result);
+            _mapper.Map(banner, entity);
+            _repositoryWrapper.Banners.Update(entity);
             await _repositoryWrapper.Banners.SaveAsync();
             return NoContent();
         }

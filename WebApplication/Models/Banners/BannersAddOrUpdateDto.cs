@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class BannersAddDto
+    public class BannersAddOrUpdateDto
     {
         [Display(Name = "顺序")]
         public int Position { get; set; }
+        [Required(ErrorMessage = "请输入标题")]
+        [StringLength(maximumLength: 50, ErrorMessage ="{0}不能超过{1}个字符")]
+        public string Title { get; set; }
 #nullable enable
         [Url(ErrorMessage = "图片已失效")]
         [Display(Name = "图片")]

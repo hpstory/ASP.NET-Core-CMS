@@ -12,6 +12,8 @@ namespace WebApplication.Entities
         public int? Position { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime PublishTime { get; set; }
+        [Required]
+        public string Title { get; set; }
 #nullable enable
         public string? ImageUrl { get; set; }
         public string? Link { get; set; }

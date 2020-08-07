@@ -8,8 +8,9 @@ namespace WebApplication.Profiles
     {
         public BannersProfile()
         {
-            CreateMap<BannersAddDto, Banners>();
+            CreateMap<BannersAddOrUpdateDto, Banners>();
             CreateMap<Banners, BannersDto>();
+            CreateMap<BannersDto, Banners>();
         }
     }
 }
