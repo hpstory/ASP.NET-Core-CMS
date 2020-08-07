@@ -24,7 +24,7 @@ namespace WebApplication.Infrastructure
             _dbContext.Set<T>().Remove(entity);
         }
 
-        public async void SoftDelete (TId id)
+        public void SoftDelete (TId id)
         {
         }
 

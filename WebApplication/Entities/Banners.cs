@@ -9,10 +9,11 @@ namespace WebApplication.Entities
     {
         [Key]
         public int ID { get; set; }
-        public int Position { get; set; }
-        public string ImageUrl { get; set; }
-        public string Link { get; set; }
+        public int? Position { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime PublishTime { get; set; }
+#nullable enable
+        public string? ImageUrl { get; set; }
+        public string? Link { get; set; }
     }
 }

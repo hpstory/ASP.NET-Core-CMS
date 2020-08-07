@@ -37,9 +37,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Banners>> CreateBannerAsync(BannersAddDto banners)
+        public async Task<ActionResult<Banners>> CreateBannerAsync(BannersAddDto banner)
         {
-            var entity = _mapper.Map<Banners>(banners);
+            var entity = _mapper.Map<Banners>(banner);
             _repositoryWrapper.Banners.Create(entity);
             await _repositoryWrapper.Banners.SaveAsync();
 
@@ -48,15 +48,28 @@ namespace WebApplication.Controllers
             return CreatedAtRoute(nameof(GetBannersAsync), new { bannersId = returnDto.ID }, returnDto);
         }
 
-        [HttpDelete("{bannersId}")]
-        public async Task<IActionResult> DeleteBannerAsync(int bannersId)
+        [HttpDelete("{bannerId}")]
+        public async Task<IActionResult> DeleteBannerAsync(int bannerId)
         {
-            var entity = await _repositoryWrapper.Banners.GetByIdAsync(bannersId);
+            var entity = await _repositoryWrapper.Banners.GetByIdAsync(bannerId);
             if(entity == null)
             {
                 return NotFound();
             }
             _repositoryWrapper.Banners.Delete(entity);
+            await _repositoryWrapper.Banners.SaveAsync();
+            return NoContent();
+        }
+        [HttpPut("{bannerId}")]
+        public async Task<ActionResult<BannersDto>> UpdateBannerAsync(BannersDto banner)
+        {
+            var entity = await _repositoryWrapper.Banners.GetByIdAsync(banner.ID);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            var result = _mapper.Map<Banners>(banner);
+            _repositoryWrapper.Banners.Update(result);
             await _repositoryWrapper.Banners.SaveAsync();
             return NoContent();
         }
