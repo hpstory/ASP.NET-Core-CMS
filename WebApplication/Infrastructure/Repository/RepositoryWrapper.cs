@@ -11,6 +11,7 @@ namespace WebApplication.Infrastructure
     {
         private IBannersRepository _bannersRepository = null;
         private ICategoriesRepository _categoriesRepository = null;
+        private IArticlesRepository _articlesRepository = null;
         public CMSDbContext _dbContext { get; }
         public RepositoryWrapper(CMSDbContext dbContext)
         {
@@ -18,5 +19,6 @@ namespace WebApplication.Infrastructure
         }
         public IBannersRepository Banners => _bannersRepository ?? new BannersRepository(_dbContext);
         public ICategoriesRepository Categories => _categoriesRepository ?? new CategoriesRepository(_dbContext);
+        public IArticlesRepository Articles => _articlesRepository ?? new ArticlesRepository(_dbContext);
     }
 }
