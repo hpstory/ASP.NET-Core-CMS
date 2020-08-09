@@ -10,11 +10,13 @@ namespace WebApplication.Infrastructure
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private IBannersRepository _bannersRepository = null;
+        private ICategoriesRepository _categoriesRepository = null;
         public CMSDbContext _dbContext { get; }
         public RepositoryWrapper(CMSDbContext dbContext)
         {
             _dbContext = dbContext;
         }
         public IBannersRepository Banners => _bannersRepository ?? new BannersRepository(_dbContext);
+        public ICategoriesRepository Categories => _categoriesRepository ?? new CategoriesRepository(_dbContext);
     }
 }

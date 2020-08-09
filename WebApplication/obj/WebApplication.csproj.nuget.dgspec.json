@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\project\\WebApplication\\WebApplication.csproj": {}
+    "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\WebApplication.csproj": {}
   },
   "projects": {
-    "E:\\project\\WebApplication\\WebApplication.csproj": {
+    "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\WebApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\project\\WebApplication\\WebApplication.csproj",
+        "projectUniqueName": "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\WebApplication.csproj",
         "projectName": "WebApplication",
-        "projectPath": "E:\\project\\WebApplication\\WebApplication.csproj",
-        "packagesPath": "C:\\Users\\lenovo\\.nuget\\packages\\",
-        "outputPath": "E:\\project\\WebApplication\\obj\\",
+        "projectPath": "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\WebApplication.csproj",
+        "packagesPath": "C:\\Users\\mage.han\\.nuget\\packages\\",
+        "outputPath": "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mage.han\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

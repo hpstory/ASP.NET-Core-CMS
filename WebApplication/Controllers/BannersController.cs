@@ -36,6 +36,18 @@ namespace WebApplication.Controllers
             return Ok(returnDto);
         }
 
+        //[HttpGet("banner/{bannerId}")]
+        //public async Task<ActionResult<BannersDto>> GetBannerAsync(int bannerId)
+        //{
+        //    var entity = await _repositoryWrapper.Banners.GetByIdAsync(bannerId);
+        //    if(entity == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var returnDto = _mapper.Map<BannersDto>(entity);
+        //    return Ok(returnDto);
+        //}
+
         [HttpPost("banner")]
         public async Task<ActionResult<Banners>> CreateBannerAsync(BannersAddOrUpdateDto banner)
         {

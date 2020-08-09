@@ -9,5 +9,6 @@ namespace WebApplication.Infrastructure
     public interface IRepositoryWrapper
     {
         IBannersRepository Banners { get; }
+        ICategoriesRepository Categories { get; }
     }
 }
