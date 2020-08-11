@@ -1302,23 +1302,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mage.han\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\lenovo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\WebApplication.csproj",
+      "projectUniqueName": "E:\\project\\WebApplication\\WebApplication.csproj",
       "projectName": "WebApplication",
-      "projectPath": "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\WebApplication.csproj",
-      "packagesPath": "C:\\Users\\mage.han\\.nuget\\packages\\",
-      "outputPath": "D:\\project\\hpstory\\ASP.NET-Core-CMS\\WebApplication\\obj\\",
+      "projectPath": "E:\\project\\WebApplication\\WebApplication.csproj",
+      "packagesPath": "C:\\Users\\lenovo\\.nuget\\packages\\",
+      "outputPath": "E:\\project\\WebApplication\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\mage.han\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
