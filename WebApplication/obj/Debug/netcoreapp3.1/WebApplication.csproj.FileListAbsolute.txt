@@ -97,8 +97,6 @@ E:\project\WebApplication\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticS
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csprojAssemblyReference.cache
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.AssemblyInfoInputs.cache
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.AssemblyInfo.cs
-E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csproj.CoreCompileInputs.cache
-E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cache
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.RazorTargetAssemblyInfo.cache
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csproj.CopyComplete
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\staticwebassets\WebApplication.StaticWebAssets.Manifest.cache

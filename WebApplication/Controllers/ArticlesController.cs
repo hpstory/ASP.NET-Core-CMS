@@ -119,19 +119,28 @@ namespace WebApplication.Controllers
                     return Url.Link(nameof(GetArticlesAsync), new
                     {
                         pageNumber = parameters.PageNumber - 1,
-                        pageSize = parameters.PageSize
+                        pageSize = parameters.PageSize,
+                        categoryId = parameters.CategoryId,
+                        searchQuery = parameters.SearchQuery,
+                        orderBy = parameters.OrderBy,
                     });
                 case ResourceUriType.NextPage:
                     return Url.Link(nameof(GetArticlesAsync), new 
                     {
                         pageNumber = parameters.PageNumber + 1,
-                        pageSize = parameters.PageSize
+                        pageSize = parameters.PageSize,
+                        categoryId = parameters.CategoryId,
+                        searchQuery = parameters.SearchQuery,
+                        orderBy = parameters.OrderBy,
                     });
                 default:
                     return Url.Link(nameof(GetArticlesAsync), new 
                     {
                         pageNumber = parameters.PageNumber,
-                        pageSize = parameters.PageSize
+                        pageSize = parameters.PageSize,
+                        categoryId = parameters.CategoryId,
+                        searchQuery = parameters.SearchQuery,
+                        orderBy = parameters.OrderBy,
                     });
             }
         }
