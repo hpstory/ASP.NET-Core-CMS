@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.Entities;
+using WebApplication.Infrastructure.PropertyMapping;
 using WebApplication.Infrastructure.Services;
 
 namespace WebApplication.Infrastructure
@@ -13,12 +14,14 @@ namespace WebApplication.Infrastructure
         private ICategoriesRepository _categoriesRepository = null;
         private IArticlesRepository _articlesRepository = null;
         public CMSDbContext _dbContext { get; }
-        public RepositoryWrapper(CMSDbContext dbContext)
+        private readonly IPropertyMappingService _propertyMappingService;
+        public RepositoryWrapper(CMSDbContext dbContext, IPropertyMappingService propertyMappingService)
         {
             _dbContext = dbContext;
+            _propertyMappingService = propertyMappingService;
         }
         public IBannersRepository Banners => _bannersRepository ?? new BannersRepository(_dbContext);
         public ICategoriesRepository Categories => _categoriesRepository ?? new CategoriesRepository(_dbContext);
-        public IArticlesRepository Articles => _articlesRepository ?? new ArticlesRepository(_dbContext);
+        public IArticlesRepository Articles => _articlesRepository ?? new ArticlesRepository(_dbContext, _propertyMappingService);
     }
 }

@@ -11,7 +11,7 @@ namespace WebApplication.Controllers.DtoParameters
         private int _pageSize = 10;
         public int? CategoryId { get; set; }
         public string SearchQuery { get; set; }
-        public string OrderBy { get; set; } = "PublishDate";
+        public string OrderBy { get; set; } = "ArticleDate";
         public int PageNumber { get; set; } = 1;
         public int PageSize
         {

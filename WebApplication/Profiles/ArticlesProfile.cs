@@ -13,8 +13,14 @@ namespace WebApplication.Profiles
         public ArticlesProfile()
         {
             CreateMap<ArticlesAddOrUpdateDto, Articles>();
-            CreateMap<Articles, ArticlesDto>();
-            CreateMap<ArticlesDto, Articles>();
+            CreateMap<Articles, ArticlesDto>()
+                .ForMember(
+                    dest => dest.ArticleDate,
+                    opt => opt.MapFrom(src => src.PublishDate)); ;
+            CreateMap<ArticlesDto, Articles>()
+                .ForMember(
+                    dest => dest.PublishDate,
+                    opt => opt.MapFrom(src => src.ArticleDate)); ;
         }
     }
 }

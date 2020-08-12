@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 using WebApplication.Controllers.DtoParameters;
 using WebApplication.Entities;
 using WebApplication.Helpers;
+using WebApplication.Infrastructure.PropertyMapping;
+using WebApplication.Models.Articles;
 
 namespace WebApplication.Infrastructure.Services
 {
     public class ArticlesRepository : RepositoryBase<Articles, int>, IArticlesRepository
     {
-        public ArticlesRepository(DbContext dbContext) : base(dbContext)
+        private readonly IPropertyMappingService _propertyMappingService;
+        public ArticlesRepository(DbContext dbContext, IPropertyMappingService propertyMappingService) : base(dbContext)
         {
+            _propertyMappingService = propertyMappingService;
         }
 
         public async Task<PagedList<Articles>> GetAllAsync(ArticleResourceParameters parameters)
@@ -31,6 +35,7 @@ namespace WebApplication.Infrastructure.Services
                     t => t.Title.Contains(parameters.SearchQuery) || t.Content.Contains(parameters.SearchQuery));
             }
 
+            var mappingDictionary = _propertyMappingService.GetPropertyMapping<ArticlesDto, Articles>();
             queryExpression = queryExpression.ApplySort(parameters.OrderBy, mappingDictionary);
 
             return await PagedList<Articles>.CreateAsync(queryExpression, parameters.PageNumber, parameters.PageSize);

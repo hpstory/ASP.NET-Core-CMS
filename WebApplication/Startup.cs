@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using WebApplication.Entities;
 using WebApplication.Infrastructure;
+using WebApplication.Infrastructure.PropertyMapping;
 
 namespace WebApplication
 {
@@ -43,6 +44,7 @@ namespace WebApplication
             // In production, the Angular files will be served from this directory
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
