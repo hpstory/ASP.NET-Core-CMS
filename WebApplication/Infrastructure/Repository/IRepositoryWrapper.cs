@@ -11,5 +11,6 @@ namespace WebApplication.Infrastructure
         IBannersRepository Banners { get; }
         ICategoriesRepository Categories { get; }
         IArticlesRepository Articles { get; }
+        ICommentsRepository Comments { get; }
     }
 }
