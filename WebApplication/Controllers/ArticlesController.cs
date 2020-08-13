@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Text.Encodings.Web;
@@ -14,6 +15,8 @@ namespace WebApplication.Controllers
 {
     [ApiController]
     [Route("api")]
+    [HttpCacheExpiration]
+    [HttpCacheValidation]
     public class ArticlesController: ControllerBase
     {
         private IRepositoryWrapper _repositoryWrapper { get; }
@@ -55,7 +58,7 @@ namespace WebApplication.Controllers
             return Ok(returnDto);
         }
 
-        [HttpGet("article")]
+        [HttpGet("article/{articleId}")]
         public async Task<ActionResult<ArticlesDto>> GetArticleAsync(int articleId)
         {
             var entity = await _repositoryWrapper.Articles.GetByIdAsync(articleId);

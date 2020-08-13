@@ -11,7 +11,7 @@ namespace WebApplication.Entities
         [MinLength(1, ErrorMessage = "请输入内容")]
         public string Content { get; set; }
         [Required]
-        public DateTime PublishTime { get; set; }
+        public DateTime PublishTime { get; set; } = DateTime.Now;
         [Required]
         public Guid AuthorID { get; set; }
         [Required]
