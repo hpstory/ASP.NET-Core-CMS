@@ -4,5 +4,6 @@ namespace WebApplication.Entities
 {
     public class UserRole : IdentityRole
     {
+
     }
 }

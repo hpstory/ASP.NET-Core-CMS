@@ -33,7 +33,7 @@ namespace WebApplication.Controllers
             UserRole = role;
         }
         [HttpPost("register", Name = nameof(CreateUserAsync))]
-        public async Task<IActionResult> CreateUserAsync(RegisterUser user)
+        public async Task<IActionResult> CreateUserAsync(RegisterUser user, string role = "guest")
         {
             var newUser = new User
             {
@@ -44,6 +44,7 @@ namespace WebApplication.Controllers
             IdentityResult result = await UserManager.CreateAsync(newUser, user.Password);
             if (result.Succeeded)
             {
+                await AddUserToRoleAsync(newUser, role);
                 return Ok();
             }
             ModelState.AddModelError("Error", result.Errors.FirstOrDefault()?.Description);
@@ -94,6 +95,25 @@ namespace WebApplication.Controllers
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                 expiration = TimeZoneInfo.ConvertTimeFromUtc(jwtToken.ValidTo, TimeZoneInfo.Local)
             });
+        }
+
+        private async Task AddUserToRoleAsync(User user, string roleName)
+        {
+            if (user == null || string.IsNullOrWhiteSpace(roleName))
+            {
+                return;
+            }
+
+            bool isRoleExist = await UserRole.RoleExistsAsync(roleName);
+            if (!isRoleExist)
+            {
+                await UserRole.CreateAsync(new UserRole { Name = roleName });
+            }
+            if (await UserManager.IsInRoleAsync(user, roleName))
+            {
+                return;
+            }
+            await UserManager.AddToRoleAsync(user, roleName);
         }
 
     }
