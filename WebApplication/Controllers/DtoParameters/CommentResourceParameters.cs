@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebApplication.Controllers.DtoParameters
+﻿namespace WebApplication.Controllers.DtoParameters
 {
     public class CommentResourceParameters
     {
@@ -12,5 +7,6 @@ namespace WebApplication.Controllers.DtoParameters
         {
             get { return 10; }
         }
+        public string OrderBy { get; set; } = "Date";
     }
 }

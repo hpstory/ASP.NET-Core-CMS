@@ -1,8 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebApplication.Entities;
 using WebApplication.Models.Articles;
 
@@ -16,11 +12,11 @@ namespace WebApplication.Profiles
             CreateMap<Articles, ArticlesDto>()
                 .ForMember(
                     dest => dest.ArticleDate,
-                    opt => opt.MapFrom(src => src.PublishDate)); ;
+                    opt => opt.MapFrom(src => src.PublishDate));
             CreateMap<ArticlesDto, Articles>()
                 .ForMember(
                     dest => dest.PublishDate,
-                    opt => opt.MapFrom(src => src.ArticleDate)); ;
+                    opt => opt.MapFrom(src => src.ArticleDate));
         }
     }
 }

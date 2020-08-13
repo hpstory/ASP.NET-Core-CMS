@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebApplication.Entities;
+﻿using WebApplication.Entities;
 using WebApplication.Infrastructure.PropertyMapping;
 using WebApplication.Infrastructure.Services;
 
