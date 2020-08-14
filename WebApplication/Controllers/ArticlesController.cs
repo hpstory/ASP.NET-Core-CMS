@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -22,19 +23,24 @@ namespace WebApplication.Controllers
         private IRepositoryWrapper RepositoryWrapper { get; }
         private IMapper Mapper { get; }
         private readonly CMSDbContext _dbContext;
+        private ILogger _logger;
+
         public ArticlesController(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
-            CMSDbContext dbContext
+            CMSDbContext dbContext,
+            ILogger<ArticlesController> logger
             )
         {
             RepositoryWrapper = repositoryWrapper;
             Mapper = mapper;
             _dbContext = dbContext;
+            _logger = logger;
         }
         [HttpGet("articles", Name = nameof(GetArticlesAsync))]
         public async Task<ActionResult<IEnumerable<ArticlesDto>>> GetArticlesAsync([FromQuery] ArticleResourceParameters parameters)
         {
+            _logger.LogInformation($"[GetArticlesParameter]: {parameters}");
             var articles = await RepositoryWrapper.Articles.GetAllAsync(parameters);
             var previousPageLink = articles.HasPrevious ?
                 CreateArticlesResourceUri(parameters, ResourceUriType.PreviousPage) : null;
@@ -61,9 +67,11 @@ namespace WebApplication.Controllers
         [HttpGet("article/{articleId}")]
         public async Task<ActionResult<ArticlesDto>> GetArticleAsync(int articleId)
         {
+            _logger.LogInformation($"[GetArticleId]: {articleId}");
             var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
             if (entity == null)
             {
+                _logger.LogWarning($"[ArticleIdNotFound]: {articleId}");
                 return NotFound();
             }
             var returnDto = Mapper.Map<ArticlesDto>(entity);
@@ -86,6 +94,7 @@ namespace WebApplication.Controllers
             var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
             if (entity == null)
             {
+                _logger.LogWarning($"[ArticleIdNotFound]: {articleId}");
                 return NotFound();
             }
             RepositoryWrapper.Articles.Delete(entity);
@@ -98,6 +107,7 @@ namespace WebApplication.Controllers
             var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
             if (entity == null)
             {
+                _logger.LogWarning($"[ArticleIdNotFound]: {articleId}");
                 var addArticle = Mapper.Map<Articles>(article);
                 RepositoryWrapper.Articles.Create(addArticle);
                 await RepositoryWrapper.Articles.SaveAsync();

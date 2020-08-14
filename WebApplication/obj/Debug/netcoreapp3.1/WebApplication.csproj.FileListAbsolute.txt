@@ -170,3 +170,10 @@ E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.json
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.local.json
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\nlog.config
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\NLog.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\NLog.Extensions.Logging.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\NLog.Web.AspNetCore.dll
+E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csproj.CoreCompileInputs.cache
+E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cs
+E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cache
