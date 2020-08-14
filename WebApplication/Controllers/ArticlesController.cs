@@ -19,8 +19,8 @@ namespace WebApplication.Controllers
     [HttpCacheValidation]
     public class ArticlesController: ControllerBase
     {
-        private IRepositoryWrapper _repositoryWrapper { get; }
-        private IMapper _mapper { get; }
+        private IRepositoryWrapper RepositoryWrapper { get; }
+        private IMapper Mapper { get; }
         private readonly CMSDbContext _dbContext;
         public ArticlesController(
             IRepositoryWrapper repositoryWrapper,
@@ -28,14 +28,14 @@ namespace WebApplication.Controllers
             CMSDbContext dbContext
             )
         {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
+            RepositoryWrapper = repositoryWrapper;
+            Mapper = mapper;
             _dbContext = dbContext;
         }
         [HttpGet("articles", Name = nameof(GetArticlesAsync))]
         public async Task<ActionResult<IEnumerable<ArticlesDto>>> GetArticlesAsync([FromQuery] ArticleResourceParameters parameters)
         {
-            var articles = await _repositoryWrapper.Articles.GetAllAsync(parameters);
+            var articles = await RepositoryWrapper.Articles.GetAllAsync(parameters);
             var previousPageLink = articles.HasPrevious ?
                 CreateArticlesResourceUri(parameters, ResourceUriType.PreviousPage) : null;
             var nextPageLink = articles.HasNext ?
@@ -54,95 +54,92 @@ namespace WebApplication.Controllers
                 {
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 }));
-            var returnDto = _mapper.Map<IEnumerable<ArticlesDto>>(articles);
+            var returnDto = Mapper.Map<IEnumerable<ArticlesDto>>(articles);
             return Ok(returnDto);
         }
 
         [HttpGet("article/{articleId}")]
         public async Task<ActionResult<ArticlesDto>> GetArticleAsync(int articleId)
         {
-            var entity = await _repositoryWrapper.Articles.GetByIdAsync(articleId);
+            var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
             if (entity == null)
             {
                 return NotFound();
             }
-            var returnDto = _mapper.Map<ArticlesDto>(entity);
+            var returnDto = Mapper.Map<ArticlesDto>(entity);
             return Ok(returnDto);
         }
         [HttpPost("article")]
         public async Task<ActionResult<Articles>> CreateArticleAsync (ArticlesAddOrUpdateDto article)
         {
-            var entity = _mapper.Map<Articles>(article);
-            _repositoryWrapper.Articles.Create(entity);
-            await _repositoryWrapper.Articles.SaveAsync();
+            var entity = Mapper.Map<Articles>(article);
+            RepositoryWrapper.Articles.Create(entity);
+            await RepositoryWrapper.Articles.SaveAsync();
 
-            var returnDto = _mapper.Map<ArticlesDto>(entity);
+            var returnDto = Mapper.Map<ArticlesDto>(entity);
 
             return CreatedAtRoute(nameof(GetArticlesAsync), new { articleId = returnDto.ID }, returnDto);
         }
         [HttpDelete("article/{articleId}")]
         public async Task<IActionResult> DeleteArticleAsync (int articleId)
         {
-            var entity = await _repositoryWrapper.Articles.GetByIdAsync(articleId);
+            var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
             if (entity == null)
             {
                 return NotFound();
             }
-            _repositoryWrapper.Articles.Delete(entity);
-            await _repositoryWrapper.Articles.SaveAsync();
+            RepositoryWrapper.Articles.Delete(entity);
+            await RepositoryWrapper.Articles.SaveAsync();
             return NoContent();
         }
         [HttpPut("article/{articleId}")]
         public async Task<ActionResult<ArticlesDto>> UpdateArticleAsync(int articleId, ArticlesAddOrUpdateDto article)
         {
-            var entity = await _repositoryWrapper.Articles.GetByIdAsync(articleId);
+            var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
             if (entity == null)
             {
-                var addArticle = _mapper.Map<Articles>(article);
-                _repositoryWrapper.Articles.Create(addArticle);
-                await _repositoryWrapper.Articles.SaveAsync();
+                var addArticle = Mapper.Map<Articles>(article);
+                RepositoryWrapper.Articles.Create(addArticle);
+                await RepositoryWrapper.Articles.SaveAsync();
 
-                var returnDto = _mapper.Map<ArticlesDto>(addArticle);
+                var returnDto = Mapper.Map<ArticlesDto>(addArticle);
                 return CreatedAtRoute(nameof(GetArticlesAsync), new { articleId = returnDto.ID }, returnDto);
             }
-            _mapper.Map(article, entity);
-            _repositoryWrapper.Articles.Update(entity);
-            await _repositoryWrapper.Articles.SaveAsync();
+            Mapper.Map(article, entity);
+            RepositoryWrapper.Articles.Update(entity);
+            await RepositoryWrapper.Articles.SaveAsync();
             return NoContent();
         }
 
         private string CreateArticlesResourceUri(ArticleResourceParameters parameters, ResourceUriType type)
         {
-            switch (type)
+            return type switch
             {
-                case ResourceUriType.PreviousPage:
-                    return Url.Link(nameof(GetArticlesAsync), new
-                    {
-                        pageNumber = parameters.PageNumber - 1,
-                        pageSize = parameters.PageSize,
-                        categoryId = parameters.CategoryId,
-                        searchQuery = parameters.SearchQuery,
-                        orderBy = parameters.OrderBy,
-                    });
-                case ResourceUriType.NextPage:
-                    return Url.Link(nameof(GetArticlesAsync), new 
-                    {
-                        pageNumber = parameters.PageNumber + 1,
-                        pageSize = parameters.PageSize,
-                        categoryId = parameters.CategoryId,
-                        searchQuery = parameters.SearchQuery,
-                        orderBy = parameters.OrderBy,
-                    });
-                default:
-                    return Url.Link(nameof(GetArticlesAsync), new 
-                    {
-                        pageNumber = parameters.PageNumber,
-                        pageSize = parameters.PageSize,
-                        categoryId = parameters.CategoryId,
-                        searchQuery = parameters.SearchQuery,
-                        orderBy = parameters.OrderBy,
-                    });
-            }
+                ResourceUriType.PreviousPage => Url.Link(nameof(GetArticlesAsync), new
+                {
+                    pageNumber = parameters.PageNumber - 1,
+                    pageSize = parameters.PageSize,
+                    categoryId = parameters.CategoryId,
+                    searchQuery = parameters.SearchQuery,
+                    orderBy = parameters.OrderBy,
+                }),
+                ResourceUriType.NextPage => Url.Link(nameof(GetArticlesAsync), new
+                {
+                    pageNumber = parameters.PageNumber + 1,
+                    pageSize = parameters.PageSize,
+                    categoryId = parameters.CategoryId,
+                    searchQuery = parameters.SearchQuery,
+                    orderBy = parameters.OrderBy,
+                }),
+                _ => Url.Link(nameof(GetArticlesAsync), new
+                {
+                    pageNumber = parameters.PageNumber,
+                    pageSize = parameters.PageSize,
+                    categoryId = parameters.CategoryId,
+                    searchQuery = parameters.SearchQuery,
+                    orderBy = parameters.OrderBy,
+                }),
+            };
         }
     }
 }

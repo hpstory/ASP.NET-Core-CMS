@@ -15,24 +15,24 @@ namespace WebApplication.Controllers
     [Route("api")]
     public class CategoriesController : ControllerBase
     {
-        private IRepositoryWrapper _repositoryWrapper { get; }
-        private IMapper _mapper { get; }
+        private IRepositoryWrapper RepositoryWrapper { get; }
+        private IMapper Mapper { get; }
         private readonly CMSDbContext _dbContext;
         public CategoriesController(
             IRepositoryWrapper repositoryWrapper, 
             IMapper mapper,
             CMSDbContext dbContext)
         {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
+            RepositoryWrapper = repositoryWrapper;
+            Mapper = mapper;
             _dbContext = dbContext;
         }
 
         [HttpGet("categories", Name = nameof(GetCategoriesAsync))]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategoriesAsync()
         {
-            var entities = await _repositoryWrapper.Categories.GetAllAsync();
-            var returnDto = _mapper.Map<IEnumerable<CategoryDto>>(entities);
+            var entities = await RepositoryWrapper.Categories.GetAllAsync();
+            var returnDto = Mapper.Map<IEnumerable<CategoryDto>>(entities);
             return Ok(returnDto);
         }
 
@@ -51,14 +51,14 @@ namespace WebApplication.Controllers
         [HttpPut("category/{categoryId}")]
         public async Task<ActionResult<CategoryDto>> UpdateCategoryAsync(int categoryId, CategoryAddOrUpdateDto category)
         {
-            var entity = await _repositoryWrapper.Categories.GetByIdAsync(categoryId);
+            var entity = await RepositoryWrapper.Categories.GetByIdAsync(categoryId);
             if (entity == null)
             {
                 return NotFound();
             }
-            _mapper.Map(category, entity);
-            _repositoryWrapper.Categories.Update(entity);
-            await _repositoryWrapper.Categories.SaveAsync();
+            Mapper.Map(category, entity);
+            RepositoryWrapper.Categories.Update(entity);
+            await RepositoryWrapper.Categories.SaveAsync();
             return NoContent();
         }
     }

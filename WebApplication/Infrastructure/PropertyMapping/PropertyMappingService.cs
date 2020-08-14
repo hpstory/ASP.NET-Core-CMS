@@ -10,14 +10,14 @@ namespace WebApplication.Infrastructure.PropertyMapping
 {
     public class PropertyMappingService : IPropertyMappingService
     {
-        private Dictionary<string, PropertyMappingValue> _articlePropertyMapping =
+        private readonly Dictionary<string, PropertyMappingValue> _articlePropertyMapping =
             new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
             {
                 {"ID", new PropertyMappingValue(new List<string>{"ID"}) },
                 {"ArticleDate", new PropertyMappingValue(new List<string>{"PublishDate"})},
                 {"CategoryID", new PropertyMappingValue(new List<string>{"CategoryID"})},
             };
-        private Dictionary<string, PropertyMappingValue> _commentPropertyMapping =
+        private readonly Dictionary<string, PropertyMappingValue> _commentPropertyMapping =
             new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
             {
                 {"ID", new PropertyMappingValue(new List<string>{"ID"}) },

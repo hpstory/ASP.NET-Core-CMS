@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -33,7 +34,7 @@ namespace WebApplication.Controllers
             UserRole = role;
         }
         [HttpPost("register", Name = nameof(CreateUserAsync))]
-        public async Task<IActionResult> CreateUserAsync(RegisterUser user, string role = "guest")
+        public async Task<IActionResult> CreateUserAsync(RegisterUser user, [FromQuery] string role = "guest")
         {
             var newUser = new User
             {

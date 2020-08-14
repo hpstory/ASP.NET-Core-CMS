@@ -16,8 +16,8 @@ namespace WebApplication.Controllers
     [Route("api")]
     public class CommentsController : ControllerBase
     {
-        public IRepositoryWrapper _repositoryWrapper { get; }
-        public IMapper _mapper { get; }
+        public IRepositoryWrapper RepositoryWrapper { get; }
+        public IMapper Mapper { get; }
 
         private readonly CMSDbContext _dbContext;
         public CommentsController(
@@ -26,14 +26,14 @@ namespace WebApplication.Controllers
             CMSDbContext dbContext
             )
         {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
+            RepositoryWrapper = repositoryWrapper;
+            Mapper = mapper;
             _dbContext = dbContext;
         }
         [HttpGet("comments", Name = nameof(GetCommentsAsync))]
         public async Task<ActionResult<IEnumerable<CommentsDto>>> GetCommentsAsync([FromQuery] CommentResourceParameters parameters)
         {
-            var comments = await _repositoryWrapper.Comments.GetAllAsync(parameters);
+            var comments = await RepositoryWrapper.Comments.GetAllAsync(parameters);
             var previousPageLink = comments.HasPrevious ?
                 CreateCommentsResourceUri(parameters, ResourceUriType.PreviousPage) : null;
             var nextPageLink = comments.HasNext ?
@@ -52,56 +52,53 @@ namespace WebApplication.Controllers
                 {
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 }));
-            var returnDto = _mapper.Map<IEnumerable<CommentsDto>>(comments);
+            var returnDto = Mapper.Map<IEnumerable<CommentsDto>>(comments);
             return Ok(returnDto);
         }
         [HttpPost("comment")]
         public async Task<ActionResult<CommentsDto>> CreateCommentAsync(CommentsAddDto comment)
         {
-            var entity = _mapper.Map<Comments>(comment);
-            _repositoryWrapper.Comments.Create(entity);
-            await _repositoryWrapper.Articles.SaveAsync();
-            var returnDto = _mapper.Map<CommentsDto>(entity);
+            var entity = Mapper.Map<Comments>(comment);
+            RepositoryWrapper.Comments.Create(entity);
+            await RepositoryWrapper.Articles.SaveAsync();
+            var returnDto = Mapper.Map<CommentsDto>(entity);
             return CreatedAtRoute(nameof(GetCommentsAsync), new { commentId = returnDto.ID }, returnDto);
         }
         [HttpDelete("comment/{commentId}")]
         public async Task<IActionResult> DeleteCommentAsync(int commentId)
         {
-            var entity = await _repositoryWrapper.Comments.GetByIdAsync(commentId);
+            var entity = await RepositoryWrapper.Comments.GetByIdAsync(commentId);
             if (entity == null)
             {
                 return NotFound();
             }
-            _repositoryWrapper.Comments.Delete(entity);
-            await _repositoryWrapper.Comments.SaveAsync();
+            RepositoryWrapper.Comments.Delete(entity);
+            await RepositoryWrapper.Comments.SaveAsync();
             return NoContent();
         }
         private string CreateCommentsResourceUri(CommentResourceParameters parameters, ResourceUriType type)
         {
-            switch (type)
+            return type switch
             {
-                case ResourceUriType.PreviousPage:
-                    return Url.Link(nameof(GetCommentsAsync), new
-                    {
-                        pageNumber = parameters.PageNumber - 1,
-                        pageSize = parameters.PageSize,
-                        orderBy = parameters.OrderBy,
-                    });
-                case ResourceUriType.NextPage:
-                    return Url.Link(nameof(GetCommentsAsync), new
-                    {
-                        pageNumber = parameters.PageNumber + 1,
-                        pageSize = parameters.PageSize,
-                        orderBy = parameters.OrderBy,
-                    });
-                default:
-                    return Url.Link(nameof(GetCommentsAsync), new
-                    {
-                        pageNumber = parameters.PageNumber,
-                        pageSize = parameters.PageSize,
-                        orderBy = parameters.OrderBy,
-                    });
-            }
+                ResourceUriType.PreviousPage => Url.Link(nameof(GetCommentsAsync), new
+                {
+                    pageNumber = parameters.PageNumber - 1,
+                    pageSize = parameters.PageSize,
+                    orderBy = parameters.OrderBy,
+                }),
+                ResourceUriType.NextPage => Url.Link(nameof(GetCommentsAsync), new
+                {
+                    pageNumber = parameters.PageNumber + 1,
+                    pageSize = parameters.PageSize,
+                    orderBy = parameters.OrderBy,
+                }),
+                _ => Url.Link(nameof(GetCommentsAsync), new
+                {
+                    pageNumber = parameters.PageNumber,
+                    pageSize = parameters.PageSize,
+                    orderBy = parameters.OrderBy,
+                }),
+            };
         }
     }
 }

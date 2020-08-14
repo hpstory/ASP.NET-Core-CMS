@@ -168,6 +168,5 @@ E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protoc
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
-E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csproj.CoreCompileInputs.cache
-E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cs
-E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cache
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.json
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.local.json

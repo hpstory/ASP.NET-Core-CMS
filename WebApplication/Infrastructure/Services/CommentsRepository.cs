@@ -23,7 +23,7 @@ namespace WebApplication.Infrastructure.Services
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            var queryExpression = _dbContext.Set<Comments>() as IQueryable<Comments>;
+            var queryExpression = DbContext.Set<Comments>() as IQueryable<Comments>;
 
             var mappingDictionary = _propertyMappingService.GetPropertyMapping<CommentsDto, Comments>();
             queryExpression = queryExpression.ApplySort(parameters.OrderBy, mappingDictionary);

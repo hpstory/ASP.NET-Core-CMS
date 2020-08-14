@@ -31,6 +31,13 @@ namespace WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             var tokenSection = Configuration.GetSection("Security:Token");
+            services.AddHsts(options => 
+            {
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(120);
+                options.Preload = true;
+            });
+            services.AddCors();
             services.AddResponseCaching();
             services.AddHttpCacheHeaders(
                 expires =>
@@ -42,6 +49,7 @@ namespace WebApplication
                 {
                     validate.MustRevalidate = true;
                 });
+            services.AddDataProtection();
             services.AddIdentity<User, UserRole>(options => 
             {
                 // ÃÜÂëÉèÖÃ
@@ -104,12 +112,18 @@ namespace WebApplication
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseResponseCaching();
 
             app.UseHttpCacheHeaders();
 
             app.UseHttpsRedirection();
+
+            app.UseCors(builder => builder.AllowAnyOrigin());
 
             app.UseRouting();
 
