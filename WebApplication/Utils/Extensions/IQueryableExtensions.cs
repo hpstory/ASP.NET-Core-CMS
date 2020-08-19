@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using WebApplication.Helpers;
 
-
-namespace WebApplication.Helpers
+namespace WebApplication.Utils.Extensions
 {
     public static class IQueryableExtensions
     {
