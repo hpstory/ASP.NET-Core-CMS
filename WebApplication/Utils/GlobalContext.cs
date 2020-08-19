@@ -9,5 +9,7 @@ namespace WebApplication.Utils
         public static SystemConfig SystemConfig { get; set; }
 
         public static IServiceProvider ServiceProvider { get; set; }
+
+        public static IConfiguration Configuration { get; set; }
     }
 }
