@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApplication.Entities;
@@ -12,28 +9,25 @@ using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-    [EnableCors("angular")]
+    [Authorize("admin, superuser, staff")]
     [ApiController]
     [Route("api")]
     public class BannersController : ControllerBase
     {
         public IRepositoryWrapper RepositoryWrapper { get; }
         public IMapper Mapper { get; }
-        private ILogger _logger;
         private readonly CMSDbContext _dbContext;
 
         public BannersController(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
-            CMSDbContext dbContext,
-            ILogger<BannersController> logger)
+            CMSDbContext dbContext)
         {
             RepositoryWrapper = repositoryWrapper;
             Mapper = mapper;
             _dbContext = dbContext;
-            _logger = logger;
         }
-        [HttpCacheExpiration(NoStore = true)]
+
         [HttpGet("banners", Name = nameof(GetBannersAsync))]
         public async Task<ActionResult<IEnumerable<BannersDto>>> GetBannersAsync()
         {
@@ -42,17 +36,17 @@ namespace WebApplication.Controllers
             return Ok(returnDto);
         }
 
-        [HttpGet("banner/{bannerId}")]
-        public async Task<ActionResult<BannersDto>> GetBannerAsync(int bannerId)
-        {
-            var entity = await RepositoryWrapper.Banners.GetByIdAsync(bannerId);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-            var returnDto = Mapper.Map<BannersDto>(entity);
-            return Ok(returnDto);
-        }
+        //[HttpGet("banner/{bannerId}")]
+        //public async Task<ActionResult<BannersDto>> GetBannerAsync(int bannerId)
+        //{
+        //    var entity = await _repositoryWrapper.Banners.GetByIdAsync(bannerId);
+        //    if(entity == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var returnDto = _mapper.Map<BannersDto>(entity);
+        //    return Ok(returnDto);
+        //}
 
         [HttpPost("banner")]
         public async Task<ActionResult<Banners>> CreateBannerAsync(BannersAddOrUpdateDto banner)
@@ -65,6 +59,7 @@ namespace WebApplication.Controllers
 
             return CreatedAtRoute(nameof(GetBannersAsync), new { bannersId = returnDto.ID }, returnDto);
         }
+
         [HttpDelete("banner/{bannerId}")]
         public async Task<IActionResult> DeleteBannerAsync(int bannerId)
         {
@@ -77,7 +72,6 @@ namespace WebApplication.Controllers
             await RepositoryWrapper.Banners.SaveAsync();
             return NoContent();
         }
-        [HttpCacheExpiration(MaxAge = 30)]
         [HttpPut("banner/{bannerId}")]
         public async Task<ActionResult<BannersDto>> UpdateBannerAsync(int bannerId, BannersAddOrUpdateDto banner)
         {
