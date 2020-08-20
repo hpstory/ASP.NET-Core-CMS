@@ -37,8 +37,13 @@ namespace WebApplication
                 options.MaxAge = TimeSpan.FromDays(120);
                 options.Preload = true;
             });
-            services.AddCors();
-            services.AddResponseCaching();
+            services.AddCors(options => 
+            {
+                options.AddPolicy(
+                    "angular", 
+                    builder => builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader().AllowAnyMethod());
+            });
             services.AddHttpCacheHeaders(
                 expires =>
                 {
@@ -49,6 +54,7 @@ namespace WebApplication
                 {
                     validate.MustRevalidate = true;
                 });
+            services.AddResponseCaching();
             services.AddDataProtection();
             services.AddIdentity<User, UserRole>(options => 
             {
@@ -66,7 +72,7 @@ namespace WebApplication
 
                 // ”√ªß…Ë÷√
                 options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@+";
                 options.User.RequireUniqueEmail = false;
             }).AddEntityFrameworkStores<CMSDbContext>();
             services.AddAuthentication(options => 
@@ -121,11 +127,11 @@ namespace WebApplication
 
             app.UseHttpCacheHeaders();
 
-            app.UseHttpsRedirection();
-
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseHttpsRedirection();          
 
             app.UseRouting();
+
+            app.UseCors("angular");
 
             app.UseAuthorization();
 
