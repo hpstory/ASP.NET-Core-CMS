@@ -7,7 +7,7 @@ namespace WebApplication.Helpers.IdGenerator
     /// </summary>
     public class IdGeneratorHelper
     {
-        private readonly int SnowFlakeWorkerId = GlobalContext.SystemConfig.SnowFlakeWorkerId;
+        private readonly int SnowFlakeWorkerId = 2;
         private Snowflake snowflake;
 
         public IdGeneratorHelper()

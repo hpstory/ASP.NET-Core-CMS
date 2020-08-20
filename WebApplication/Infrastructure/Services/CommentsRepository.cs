@@ -7,6 +7,7 @@ using WebApplication.Entities;
 using WebApplication.Helpers;
 using WebApplication.Infrastructure.PropertyMapping;
 using WebApplication.Models.Comments;
+using WebApplication.Utils.Extensions;
 
 namespace WebApplication.Infrastructure.Services
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using WebApplication.Helpers;
 
 namespace WebApplication.Helpers.IdGenerator
 {

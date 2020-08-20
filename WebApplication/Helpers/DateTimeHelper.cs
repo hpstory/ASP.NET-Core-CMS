@@ -2,7 +2,7 @@
 
 namespace WebApplication.Helpers
 {
-    public static class DateTimeHelper
+    public class DateTimeHelper
     {
         #region 毫秒转天时分秒
         /// <summary>
