@@ -177,3 +177,4 @@ E:\project\WebApplication\bin\Debug\netcoreapp3.1\NLog.Web.AspNetCore.dll
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csproj.CoreCompileInputs.cache
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cs
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cache
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\.filenesting.json

@@ -3,12 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication.Entities
 {
-    public class CMSDbContext : IdentityDbContext<User, UserRole, string>
+    public class CMSDbContext : DbContext
     {
         public CMSDbContext(DbContextOptions<CMSDbContext> options) : base(options) { }
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<UserRole> UserRole { get; set; }
-        public virtual DbSet<UserPermission> UserPermission { get; set; }
         public virtual DbSet<Banners> Banners { get; set; }
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Articles> Articles { get; set; }

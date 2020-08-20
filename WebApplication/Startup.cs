@@ -5,6 +5,7 @@ using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using WebApplication.Entities;
+using WebApplication.Entities.Identity.Entities;
 using WebApplication.Filters;
 using WebApplication.Infrastructure;
 using WebApplication.Infrastructure.PropertyMapping;
@@ -40,9 +42,10 @@ namespace WebApplication
             services.AddCors(options => 
             {
                 options.AddPolicy(
-                    "angular", 
-                    builder => builder.WithOrigins("http://localhost:4200")
-                    .AllowAnyHeader().AllowAnyMethod());
+                    "any", 
+                    builder => builder.AllowAnyOrigin().WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader().AllowAnyMethod()
+                    .AllowCredentials().SetPreflightMaxAge(TimeSpan.FromSeconds(60)));
             });
             services.AddHttpCacheHeaders(
                 expires =>
@@ -56,7 +59,7 @@ namespace WebApplication
                 });
             services.AddResponseCaching();
             services.AddDataProtection();
-            services.AddIdentity<User, UserRole>(options => 
+            services.AddIdentity<User, IdentityRole>(options => 
             {
                 // √‹¬Î…Ë÷√
                 options.Password.RequireDigit = true;
@@ -74,7 +77,7 @@ namespace WebApplication
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@+";
                 options.User.RequireUniqueEmail = false;
-            }).AddEntityFrameworkStores<CMSDbContext>();
+            }).AddEntityFrameworkStores<IdentityDbContext>();
             services.AddAuthentication(options => 
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -131,7 +134,7 @@ namespace WebApplication
 
             app.UseRouting();
 
-            app.UseCors("angular");
+            app.UseCors("any");
 
             app.UseAuthorization();
 
