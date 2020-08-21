@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebApplication.Entities.Identity.Entities;
 
 namespace WebApplication.Entities
 {
-    public class CMSDbContext : DbContext
+    public class CMSDbContext : IdentityDbContext<User>
     {
         public CMSDbContext(DbContextOptions<CMSDbContext> options) : base(options) { }
         public virtual DbSet<Banners> Banners { get; set; }
@@ -25,6 +27,13 @@ namespace WebApplication.Entities
                 .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>();
+            modelBuilder.Entity<IdentityRole>().ToTable("Role");
+            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaim");
+            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRole");
+            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogin");
+            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
+            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserToken");
         }
     }
 }

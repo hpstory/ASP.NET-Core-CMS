@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace WebApplication.Entities.Identity.Entities
 {
@@ -8,7 +9,7 @@ namespace WebApplication.Entities.Identity.Entities
         public string Gender { get; set; }
         public int GenderType { get; set; }
         public string City { get; set; }
-        public string Year { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Avatar { get; set; }
         public string Province { get; set; }
     }

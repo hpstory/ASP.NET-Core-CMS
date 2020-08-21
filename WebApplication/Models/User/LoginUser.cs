@@ -14,5 +14,7 @@ namespace WebApplication.Models.User
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required]
+        public bool Remenber { get; set; }
     }
 }

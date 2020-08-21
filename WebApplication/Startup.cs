@@ -39,13 +39,23 @@ namespace WebApplication
                 options.MaxAge = TimeSpan.FromDays(120);
                 options.Preload = true;
             });
-            services.AddCors(options => 
+            services.AddCors(options =>
             {
                 options.AddPolicy(
-                    "any", 
-                    builder => builder.AllowAnyOrigin().WithOrigins("http://localhost:4200")
-                    .AllowAnyHeader().AllowAnyMethod()
-                    .AllowCredentials().SetPreflightMaxAge(TimeSpan.FromSeconds(60)));
+                    "angular",
+                    builder =>
+                    {
+                        builder.WithOrigins(new string[] { "http://localhost:4200" });
+                        builder.AllowAnyHeader();
+                        builder.WithMethods("GET", "POST", "PUT", "DELETE");
+                        builder.AllowCredentials();
+                        builder.SetPreflightMaxAge(TimeSpan.FromSeconds(60));
+                    });
+            });
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = Configuration["ConnectionRedis:Connection"];
+                options.InstanceName = Configuration["ConnectionRedis:InstanceName"];
             });
             services.AddHttpCacheHeaders(
                 expires =>
@@ -77,7 +87,7 @@ namespace WebApplication
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@+";
                 options.User.RequireUniqueEmail = false;
-            }).AddEntityFrameworkStores<IdentityDbContext>();
+            }).AddEntityFrameworkStores<CMSDbContext>();
             services.AddAuthentication(options => 
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -104,6 +114,10 @@ namespace WebApplication
                 setup.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
             });
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(Convert.ToDouble(Configuration["ConnectionRedis:SessionTimeOut"]));
+            });
             services.AddDbContext<CMSDbContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("MySQLConnection"));
@@ -126,15 +140,17 @@ namespace WebApplication
                 app.UseHsts();
             }
 
+            app.UseCors("angular");
+
             app.UseResponseCaching();
 
             app.UseHttpCacheHeaders();
 
-            app.UseHttpsRedirection();          
+            app.UseHttpsRedirection();
+
+            app.UseSession();
 
             app.UseRouting();
-
-            app.UseCors("any");
 
             app.UseAuthorization();
 

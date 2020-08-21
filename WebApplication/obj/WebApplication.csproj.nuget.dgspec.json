@@ -68,6 +68,10 @@
               "target": "Package",
               "version": "[3.1.6, )"
             },
+            "Microsoft.Extensions.Caching.Redis": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "NLog.Web.AspNetCore": {
               "target": "Package",
               "version": "[4.9.3, )"
@@ -75,6 +79,10 @@
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[3.1.2, )"
+            },
+            "ZKWeb.System.Drawing": {
+              "target": "Package",
+              "version": "[4.0.1, )"
             }
           },
           "imports": [

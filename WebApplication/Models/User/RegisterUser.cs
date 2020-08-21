@@ -14,9 +14,6 @@ namespace WebApplication.Models.User
         [MaxLength(16, ErrorMessage = "{0}不能超过{1}位")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "两次密码不一致")]
-        public string ConfirmPassword { get; set; }
         [Required]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }

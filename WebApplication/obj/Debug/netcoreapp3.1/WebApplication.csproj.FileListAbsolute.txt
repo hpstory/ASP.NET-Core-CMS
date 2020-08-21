@@ -174,7 +174,10 @@ E:\project\WebApplication\bin\Debug\netcoreapp3.1\nlog.config
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\NLog.dll
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\NLog.Extensions.Logging.dll
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\NLog.Web.AspNetCore.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\.filenesting.json
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\ZKWeb.System.Drawing.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Redis.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\StackExchange.Redis.StrongName.dll
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csproj.CoreCompileInputs.cache
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cs
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cache
-E:\project\WebApplication\bin\Debug\netcoreapp3.1\.filenesting.json
