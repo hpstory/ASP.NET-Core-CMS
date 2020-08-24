@@ -15,6 +15,5 @@ namespace WebApplication.Models.User
         public string City { get; set; }
         public int Age { get; set; }
         public string Province { get; set; }
-        public string JwtToken { get; set; }
     }
 }

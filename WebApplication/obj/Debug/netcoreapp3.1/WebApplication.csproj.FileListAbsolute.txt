@@ -178,6 +178,11 @@ E:\project\WebApplication\bin\Debug\netcoreapp3.1\.filenesting.json
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\ZKWeb.System.Drawing.dll
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Redis.dll
 E:\project\WebApplication\bin\Debug\netcoreapp3.1\StackExchange.Redis.StrongName.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\project\WebApplication\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.Versioning.dll
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.csproj.CoreCompileInputs.cache
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cs
 E:\project\WebApplication\obj\Debug\netcoreapp3.1\WebApplication.MvcApplicationPartsAssemblyInfo.cache

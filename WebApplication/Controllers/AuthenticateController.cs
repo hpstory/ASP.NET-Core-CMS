@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,17 +22,20 @@ namespace WebApplication.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        public IMapper _mapper { get; }
         public IConfiguration Configuration { get; }       
 
         public AuthenticateController(
             IConfiguration configuration,
             SignInManager<User> signInManager,
-            UserManager<User> userManager
+            UserManager<User> userManager,
+            IMapper mapper
             )
         {
             Configuration = configuration;
             _signInManager = signInManager;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         [HttpPost("account/login")]
@@ -50,13 +54,16 @@ namespace WebApplication.Controllers
                 {
                     return Unauthorized();
                 }
-                if (login.Remenber)
+                if (!login.Remember)
                 {
-                    GenerateTokenAsync(user, LoginState.NoState);
+                    return GenerateTokenAsync(user, LoginState.NoState);
                 }
-                return Ok();
+                return GenerateTokenAsync(user, LoginState.Login);
             }
-            return BadRequest();
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost("account/signup")]
@@ -80,23 +87,26 @@ namespace WebApplication.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(registerUser.PhoneNumber);
-                GenerateTokenAsync(user);
+                return GenerateTokenAsync(user);
             }
             ModelState.AddModelError("Error", result.Errors.FirstOrDefault()?.Description);
             return BadRequest("注册失败");
+
         }
         [Route("token")]
-        public IActionResult GenerateTokenAsync(User user, LoginState state = LoginState.login)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        private IActionResult GenerateTokenAsync(User user, LoginState state = LoginState.Login)
         {
             var claims = new Claim[]
             {
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, user.PhoneNumber),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
             var tokenConfigSection = Configuration.GetSection("Security:Token");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigSection["Key"]));
             var signCredential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            if (state == LoginState.login)
+            var userInfo = _mapper.Map<UserInfoDto>(user);
+            if (state == LoginState.Login)
             {
                 var jwtToken = new JwtSecurityToken(
                     issuer: tokenConfigSection["Issuer"],
@@ -107,6 +117,7 @@ namespace WebApplication.Controllers
                 );
                 return Ok(new
                 {
+                    userInfo,
                     token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                     expiration = TimeZoneInfo.ConvertTimeFromUtc(jwtToken.ValidTo, TimeZoneInfo.Local)
                 });
@@ -122,13 +133,14 @@ namespace WebApplication.Controllers
                 );
                 return Ok(new
                 {
+                    userInfo,
                     token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                     expiration = TimeZoneInfo.ConvertTimeFromUtc(jwtToken.ValidTo, TimeZoneInfo.Local)
                 });
             }
 
         }
-        [Route("getCaptcha")]
+        [HttpGet("getCaptcha")]
         public IActionResult GetCaptchaImage()
         {
             Tuple<string, string> captchaCode = CaptchaHelper.GetCaptchaCode();

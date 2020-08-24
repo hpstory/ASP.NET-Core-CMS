@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Entities.Enum
 {
-    public enum LoginState
+    public enum GenderType
     {
-        NoState = 0,
-        Login = 1
+        未知 = 0,
+        男 = 1,
+        女 = 2
     }
 }

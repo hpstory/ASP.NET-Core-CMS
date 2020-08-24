@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,9 @@ using WebApplication.Models.Categories;
 
 namespace WebApplication.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api")]
+
     public class CategoriesController : ControllerBase
     {
         private IRepositoryWrapper RepositoryWrapper { get; }
@@ -27,7 +28,7 @@ namespace WebApplication.Controllers
             Mapper = mapper;
             _dbContext = dbContext;
         }
-
+        [HttpCacheExpiration(NoStore = true)]
         [HttpGet("categories", Name = nameof(GetCategoriesAsync))]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategoriesAsync()
         {
@@ -47,7 +48,9 @@ namespace WebApplication.Controllers
 
         //    return CreatedAtRoute(nameof(GetCategoriesAsync), new { bannersId = returnDto.ID }, returnDto);
         //}
-
+        [HttpCacheExpiration]
+        [HttpCacheValidation]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("category/{categoryId}")]
         public async Task<ActionResult<CategoryDto>> UpdateCategoryAsync(int categoryId, CategoryAddOrUpdateDto category)
         {

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using WebApplication.Entities;
 using WebApplication.Entities.Identity.Entities;
@@ -106,6 +107,13 @@ namespace WebApplication
                     ClockSkew = TimeSpan.Zero
                 };
             });
+            services.AddSwaggerGen(config => {
+                config.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "CMS API",
+                    Version = "v1"
+                });
+            });
             services.AddControllers(config => 
             {
                 config.Filters.Add<JsonExceptionFilter>();
@@ -153,6 +161,12 @@ namespace WebApplication
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(config => {
+                config.SwaggerEndpoint("v1/swagger.json", "CMS API v1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

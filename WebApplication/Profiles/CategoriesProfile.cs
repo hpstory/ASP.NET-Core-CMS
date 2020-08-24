@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Linq;
 using WebApplication.Entities;
 using WebApplication.Models.Categories;
 
@@ -9,7 +10,11 @@ namespace WebApplication.Profiles
         public CategoriesProfile()
         {
             CreateMap<CategoryAddOrUpdateDto, Categories>();
-            CreateMap<Categories, CategoryDto>();
+            CreateMap<Categories, CategoryDto>()
+                .ForMember(
+                    dest => dest.NewsCount,
+                    opt => opt.MapFrom(src => src.Articles.Count())
+                );
             CreateMap<CategoryDto, Categories>();
         }
     }

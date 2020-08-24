@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using WebApplication.Entities.Enum;
 using WebApplication.Entities.Identity.Entities;
 using WebApplication.Models.User;
 
@@ -13,6 +14,9 @@ namespace WebApplication.Profiles
                 .ForMember(
                     dest => dest.Age,
                     opt => opt.MapFrom(src => DateTime.Now.Year - src.BirthDate.Year)
+                ).ForMember(
+                    dest => dest.Gender,
+                    opt => opt.MapFrom(src => src.GenderType)
                 );
         }
     }

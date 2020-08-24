@@ -58,6 +58,10 @@
               "target": "Package",
               "version": "[3.1.6, )"
             },
+            "Microsoft.AspNetCore.Mvc.Versioning": {
+              "target": "Package",
+              "version": "[4.1.1, )"
+            },
             "Microsoft.EntityFrameworkCore.DynamicLinq": {
               "target": "Package",
               "version": "[3.2.1, )"
@@ -79,6 +83,10 @@
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[3.1.2, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.5.1, )"
             },
             "ZKWeb.System.Drawing": {
               "target": "Package",

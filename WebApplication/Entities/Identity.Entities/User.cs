@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using WebApplication.Entities.Enum;
 
 namespace WebApplication.Entities.Identity.Entities
 {
@@ -7,7 +8,7 @@ namespace WebApplication.Entities.Identity.Entities
     {
         public string NickName { get; set; }
         public string Gender { get; set; }
-        public int GenderType { get; set; }
+        public GenderType GenderType { get; set; }
         public string City { get; set; }
         public DateTime BirthDate { get; set; }
         public string Avatar { get; set; }
