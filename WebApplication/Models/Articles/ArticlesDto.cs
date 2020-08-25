@@ -8,9 +8,10 @@ namespace WebApplication.Models.Articles
         public string Title { get; set; }
         public string Author { get; set; }
         public string Cover { get; set; }
-        public DateTime ArticleDate { get; set; }
+        public string PublishDate { get; set; }
         public string Content { get; set; }
-        public int CategoryID { get; set; }
-        public Guid PublisherID { get; set; }
+        public string CategoryName { get; set; }
+        public string PublisherName { get; set; }
+        public bool IsHot { get; set; }
     }
 }

@@ -9,8 +9,8 @@ using WebApplication.Entities;
 namespace WebApplication.Migrations
 {
     [DbContext(typeof(CMSDbContext))]
-    [Migration("20200821062856_i")]
-    partial class i
+    [Migration("20200825073710_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -166,19 +166,24 @@ namespace WebApplication.Migrations
                     b.Property<string>("Cover")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<bool>("IsHot")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("PublisherID")
-                        .HasColumnType("char(36)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
                     b.HasKey("ID");
 
                     b.HasIndex("CategoryID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Articles");
                 });
@@ -236,8 +241,8 @@ namespace WebApplication.Migrations
                     b.Property<int>("ArticleID")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("AuthorID")
-                        .HasColumnType("char(36)");
+                    b.Property<int?>("ArticlesID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -246,9 +251,14 @@ namespace WebApplication.Migrations
                     b.Property<DateTime>("PublishTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("ArticleID");
+                    b.HasIndex("ArticlesID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -335,7 +345,7 @@ namespace WebApplication.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -396,15 +406,21 @@ namespace WebApplication.Migrations
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("WebApplication.Entities.Identity.Entities.User", "User")
+                        .WithMany("Articles")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("WebApplication.Entities.Comments", b =>
                 {
                     b.HasOne("WebApplication.Entities.Articles", "Articles")
                         .WithMany("Comments")
-                        .HasForeignKey("ArticleID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("ArticlesID");
+
+                    b.HasOne("WebApplication.Entities.Identity.Entities.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

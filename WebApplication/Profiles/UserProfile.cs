@@ -2,7 +2,7 @@
 using System;
 using WebApplication.Entities.Enum;
 using WebApplication.Entities.Identity.Entities;
-using WebApplication.Models.User;
+using WebApplication.Models.UserInfo;
 
 namespace WebApplication.Profiles
 {

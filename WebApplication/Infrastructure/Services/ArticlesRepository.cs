@@ -25,7 +25,10 @@ namespace WebApplication.Infrastructure.Services
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            var queryExpression = DbContext.Set<Articles>() as IQueryable<Articles>;
+            var queryExpression = DbContext.Set<Articles>()
+                .Include(c => c.Category)
+                .Include(u => u.User) 
+                as IQueryable<Articles>;
             if (!(parameters.CategoryId == null))
             {
                 queryExpression = queryExpression.Where(c => c.CategoryID == parameters.CategoryId);

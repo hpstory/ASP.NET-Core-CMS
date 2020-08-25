@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using WebApplication.Entities.Enum;
 using WebApplication.Entities.Identity.Entities;
 using WebApplication.Helpers;
-using WebApplication.Models.User;
+using WebApplication.Models.UserInfo;
 
 namespace WebApplication.Controllers
 {

@@ -32,22 +32,24 @@ namespace WebApplication.Controllers
         [HttpGet("categories", Name = nameof(GetCategoriesAsync))]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategoriesAsync()
         {
-            var entities = await RepositoryWrapper.Categories.GetAllAsync();
+            var entities = await RepositoryWrapper.Categories.GetAllCategoriesAsync();
             var returnDto = Mapper.Map<IEnumerable<CategoryDto>>(entities);
             return Ok(returnDto);
         }
 
-        //[HttpPost("category")]
-        //public async Task<ActionResult<Categories>> CreateCategoryAsync(CategoryAddOrUpdateDto category)
-        //{
-        //    var entity = _mapper.Map<Categories>(category);
-        //    _repositoryWrapper.Categories.Create(entity);
-        //    await _repositoryWrapper.Banners.SaveAsync();
+        [Authorize(Roles = "sadmin")]
+        [HttpPost("category")]
+        public async Task<ActionResult<Categories>> CreateCategoryAsync(CategoryAddOrUpdateDto category)
+        {
+            var entity = Mapper.Map<Categories>(category);
+            RepositoryWrapper.Categories.Create(entity);
+            await RepositoryWrapper.Categories.SaveAsync();
 
-        //    var returnDto = _mapper.Map<CategoryDto>(entity);
+            var returnDto = Mapper.Map<CategoryDto>(entity);
 
-        //    return CreatedAtRoute(nameof(GetCategoriesAsync), new { bannersId = returnDto.ID }, returnDto);
-        //}
+            return CreatedAtRoute(nameof(GetCategoriesAsync), new { categoryId = returnDto.ID }, returnDto);
+        }
+
         [HttpCacheExpiration]
         [HttpCacheValidation]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

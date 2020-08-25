@@ -13,7 +13,10 @@ namespace WebApplication.Profiles
             CreateMap<Categories, CategoryDto>()
                 .ForMember(
                     dest => dest.NewsCount,
-                    opt => opt.MapFrom(src => src.Articles.Count())
+                    opt => opt.MapFrom(src => src.Articles.Select(a => new
+                    {
+                        NewsCount = a.CategoryID
+                    }).Count())
                 );
             CreateMap<CategoryDto, Categories>();
         }

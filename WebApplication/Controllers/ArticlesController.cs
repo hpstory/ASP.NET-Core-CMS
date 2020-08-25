@@ -63,7 +63,6 @@ namespace WebApplication.Controllers
             var returnDto = Mapper.Map<IEnumerable<ArticlesDto>>(articles);
             return Ok(returnDto);
         }
-
         [HttpGet("article/{articleId}")]
         public async Task<ActionResult<ArticlesDto>> GetArticleAsync(int articleId)
         {

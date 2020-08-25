@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WebApplication.Entities.Identity.Entities;
 
 namespace WebApplication.Entities
 {
@@ -13,9 +14,8 @@ namespace WebApplication.Entities
         [Required]
         public DateTime PublishTime { get; set; } = DateTime.Now;
         [Required]
-        public Guid AuthorID { get; set; }
-        [Required]
         public int ArticleID { get; set; }
+        public User User { get; set; }
         public Articles Articles { get; set; }
     }
 }

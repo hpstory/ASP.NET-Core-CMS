@@ -11,12 +11,15 @@ namespace WebApplication.Profiles
             CreateMap<ArticlesAddOrUpdateDto, Articles>();
             CreateMap<Articles, ArticlesDto>()
                 .ForMember(
-                    dest => dest.ArticleDate,
-                    opt => opt.MapFrom(src => src.PublishDate));
-            CreateMap<ArticlesDto, Articles>()
+                    dest => dest.CategoryName,
+                    opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(
+                    dest => dest.PublisherName,
+                    opt => opt.MapFrom(src => src.User.NickName))
                 .ForMember(
                     dest => dest.PublishDate,
-                    opt => opt.MapFrom(src => src.ArticleDate));
+                    opt => opt.MapFrom(src => src.PublishDate.ToString("yyyy-MM-dd HH:mm:ss")));
+            CreateMap<ArticlesDto, Articles>();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using WebApplication.Entities.Identity.Entities;
 
 namespace WebApplication.Entities
 {
@@ -18,8 +20,9 @@ namespace WebApplication.Entities
         public string Content { get; set; }
         [Required]
         public int CategoryID { get; set; }
-        [Required]
-        public Guid PublisherID { get; set; }
+        public bool IsHot { get; set; } = false;
+        public User User { get; set; }
+        [ForeignKey("CategoryID")]
         public Categories Category { get; set; }
         public ICollection<Comments> Comments { get; set; }
     }
