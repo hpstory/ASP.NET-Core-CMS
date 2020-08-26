@@ -4,9 +4,8 @@
     {
         public const int MaxPageSize = 50;
         private int _pageSize = 10;
-        public int? CategoryId { get; set; }
         public string SearchQuery { get; set; }
-        public string OrderBy { get; set; } = "ArticleDate";
+        public string OrderBy { get; set; } = "ArticleDate desc";
         public int PageNumber { get; set; } = 1;
         public int PageSize
         {
@@ -16,5 +15,7 @@
                 _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
             }
         }
+# nullable enable
+        public string? CategoryName { get; set; }
     }
 }

@@ -29,9 +29,9 @@ namespace WebApplication.Infrastructure.Services
                 .Include(c => c.Category)
                 .Include(u => u.User) 
                 as IQueryable<Articles>;
-            if (!(parameters.CategoryId == null))
+            if (!(string.IsNullOrWhiteSpace(parameters.CategoryName)))
             {
-                queryExpression = queryExpression.Where(c => c.CategoryID == parameters.CategoryId);
+                queryExpression = queryExpression.Where(c => c.Category.Name == parameters.CategoryName);
             }
             if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
             {

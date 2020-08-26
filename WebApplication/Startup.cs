@@ -47,7 +47,7 @@ namespace WebApplication
                     builder =>
                     {
                         builder.WithOrigins(new string[] { "http://localhost:4200" });
-                        builder.AllowAnyHeader();
+                        builder.AllowAnyHeader().WithExposedHeaders("X-Pagination");
                         builder.WithMethods("GET", "POST", "PUT", "DELETE");
                         builder.AllowCredentials();
                         builder.SetPreflightMaxAge(TimeSpan.FromSeconds(60));

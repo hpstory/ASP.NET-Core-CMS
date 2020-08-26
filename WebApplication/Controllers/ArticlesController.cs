@@ -17,7 +17,6 @@ namespace WebApplication.Controllers
     [ApiController]
     [Route("api")]
     [HttpCacheExpiration]
-    [HttpCacheValidation]
     public class ArticlesController: ControllerBase
     {
         private IRepositoryWrapper RepositoryWrapper { get; }
@@ -37,6 +36,8 @@ namespace WebApplication.Controllers
             _dbContext = dbContext;
             _logger = logger;
         }
+
+        [HttpCacheExpiration(NoStore = true)]
         [HttpGet("articles", Name = nameof(GetArticlesAsync))]
         public async Task<ActionResult<IEnumerable<ArticlesDto>>> GetArticlesAsync([FromQuery] ArticleResourceParameters parameters)
         {
@@ -128,7 +129,7 @@ namespace WebApplication.Controllers
                 {
                     pageNumber = parameters.PageNumber - 1,
                     pageSize = parameters.PageSize,
-                    categoryId = parameters.CategoryId,
+                    parameters.CategoryName,
                     searchQuery = parameters.SearchQuery,
                     orderBy = parameters.OrderBy,
                 }),
@@ -136,7 +137,7 @@ namespace WebApplication.Controllers
                 {
                     pageNumber = parameters.PageNumber + 1,
                     pageSize = parameters.PageSize,
-                    categoryId = parameters.CategoryId,
+                    parameters.CategoryName,
                     searchQuery = parameters.SearchQuery,
                     orderBy = parameters.OrderBy,
                 }),
@@ -144,7 +145,7 @@ namespace WebApplication.Controllers
                 {
                     pageNumber = parameters.PageNumber,
                     pageSize = parameters.PageSize,
-                    categoryId = parameters.CategoryId,
+                    parameters.CategoryName,
                     searchQuery = parameters.SearchQuery,
                     orderBy = parameters.OrderBy,
                 }),
