@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using AutoMapper;
 using Marvin.Cache.Headers;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -166,6 +168,16 @@ namespace WebApplication
 
             app.UseSwaggerUI(config => {
                 config.SwaggerEndpoint("v1/swagger.json", "CMS API v1");
+            });
+
+            app.UseStaticFiles();
+
+            app.UseFileServer(new FileServerOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "UploadFile")),
+                RequestPath = "/StaticFiles",
+                EnableDirectoryBrowsing = true
             });
 
             app.UseEndpoints(endpoints =>
