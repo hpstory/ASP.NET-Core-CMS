@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using WebApplication.Models;
 
 namespace WebApplication.Controllers.Upload
 {
@@ -50,7 +49,13 @@ namespace WebApplication.Controllers.Upload
                     await formFile.CopyToAsync(fileStream);
 
                     var completeFilePath = Path.Combine(filePath, saveName);
-                    return Ok(new { completeFilePath });
+                    return Created(
+                        nameof(OnPostUploadAsync), 
+                        new FileUploadDto 
+                        { 
+                            FileName = saveName,
+                            FilePath = "https://localhost:5001/staticFiles" + completeFilePath.Replace("/UploadFile", "")
+                        });
                 }
 
                 return NotFound();
@@ -60,5 +65,7 @@ namespace WebApplication.Controllers.Upload
                 return BadRequest();
             }
         }
+
+        
     }
 }

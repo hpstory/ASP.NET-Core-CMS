@@ -12,9 +12,9 @@ using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
-    [EnableCors("angular")]
     [ApiController]
     [Route("api")]
+    [EnableCors("angular")]
     public class BannersController : ControllerBase
     {
         public IRepositoryWrapper RepositoryWrapper { get; }

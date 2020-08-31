@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -77,6 +79,9 @@ namespace WebApplication.Controllers
             var returnDto = Mapper.Map<ArticlesDto>(entity);
             return Ok(returnDto);
         }
+        [HttpCacheExpiration]
+        [HttpCacheValidation]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("article")]
         public async Task<ActionResult<Articles>> CreateArticleAsync (ArticlesAddOrUpdateDto article)
         {
@@ -88,6 +93,9 @@ namespace WebApplication.Controllers
 
             return CreatedAtRoute(nameof(GetArticlesAsync), new { articleId = returnDto.ID }, returnDto);
         }
+        [HttpCacheExpiration]
+        [HttpCacheValidation]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("article/{articleId}")]
         public async Task<IActionResult> DeleteArticleAsync (int articleId)
         {

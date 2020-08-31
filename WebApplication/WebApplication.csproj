@@ -25,5 +25,9 @@
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UploadFile\" />
+  </ItemGroup>
+
 
 </Project>

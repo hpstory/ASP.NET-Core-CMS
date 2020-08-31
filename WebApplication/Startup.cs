@@ -150,8 +150,6 @@ namespace WebApplication
                 app.UseHsts();
             }
 
-            app.UseCors("angular");
-
             app.UseResponseCaching();
 
             app.UseHttpCacheHeaders();
@@ -161,6 +159,8 @@ namespace WebApplication
             app.UseSession();
 
             app.UseRouting();
+
+            app.UseCors("angular");
 
             app.UseAuthorization();
 
@@ -176,7 +176,7 @@ namespace WebApplication
             {
                 FileProvider = new PhysicalFileProvider(
                     Path.Combine(Directory.GetCurrentDirectory(), "UploadFile")),
-                RequestPath = "/StaticFiles",
+                RequestPath = "/staticFiles",
                 EnableDirectoryBrowsing = true
             });
 

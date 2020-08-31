@@ -3,3 +3,5 @@
 ################################################################################
 
 /WebApplication/bin/Debug/netcoreapp3.1/logs/app_logs_2020-08-14.log
+/WebApplication/bin/Debug/netcoreapp3.1/logs
+/WebApplication/UploadFile

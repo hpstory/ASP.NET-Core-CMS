@@ -17,7 +17,7 @@ namespace WebApplication.Infrastructure
             DbContext = dbContext;
             _propertyMappingService = propertyMappingService;
         }
-        public IBannersRepository Banners => _bannersRepository ?? new BannersRepository(DbContext);
+        public IBannersRepository Banners => _bannersRepository ?? new BannersRepository(DbContext, _propertyMappingService);
         public ICategoriesRepository Categories => _categoriesRepository ?? new CategoriesRepository(DbContext);
         public IArticlesRepository Articles => _articlesRepository ?? new ArticlesRepository(DbContext, _propertyMappingService);
         public ICommentsRepository Comments => _commentsRepository ?? new CommentsRepository(DbContext, _propertyMappingService);
