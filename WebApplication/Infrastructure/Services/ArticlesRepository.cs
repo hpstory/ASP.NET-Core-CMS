@@ -29,7 +29,7 @@ namespace WebApplication.Infrastructure.Services
                 .Include(c => c.Category)
                 .Include(u => u.User) 
                 as IQueryable<Articles>;
-            if (!(string.IsNullOrWhiteSpace(parameters.CategoryName)))
+            if (!string.IsNullOrWhiteSpace(parameters.CategoryName))
             {
                 queryExpression = queryExpression.Where(c => c.Category.Name == parameters.CategoryName);
             }
@@ -43,6 +43,14 @@ namespace WebApplication.Infrastructure.Services
             queryExpression = queryExpression.ApplySort(parameters.OrderBy, mappingDictionary);
 
             return await PagedList<Articles>.CreateAsync(queryExpression, parameters.PageNumber, parameters.PageSize);
+        }
+
+        public async Task<Articles> GetArticleAsync(int articleId)
+        {
+            return await DbContext.Set<Articles>()
+                .Include(c => c.Category)
+                .Include(u => u.User)
+                .FirstOrDefaultAsync(article => article.ID == articleId);
         }
     }
 }

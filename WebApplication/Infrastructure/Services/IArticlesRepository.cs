@@ -8,5 +8,6 @@ namespace WebApplication.Infrastructure.Services
     public interface IArticlesRepository: IRepositoryBase<Articles>, IRepositoryBaseById<Articles, int>
     {
         Task<PagedList<Articles>> GetAllAsync(ArticleResourceParameters parameters);
+        Task<Articles> GetArticleAsync(int articleId);
     }
 }

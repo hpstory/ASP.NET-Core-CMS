@@ -70,7 +70,7 @@ namespace WebApplication.Controllers
         public async Task<ActionResult<ArticlesDto>> GetArticleAsync(int articleId)
         {
             _logger.LogInformation($"[GetArticleId]: {articleId}");
-            var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
+            var entity = await RepositoryWrapper.Articles.GetArticleAsync(articleId);
             if (entity == null)
             {
                 _logger.LogWarning($"[ArticleIdNotFound]: {articleId}");
@@ -112,7 +112,7 @@ namespace WebApplication.Controllers
         [HttpPut("article/{articleId}")]
         public async Task<ActionResult<ArticlesDto>> UpdateArticleAsync(int articleId, ArticlesAddOrUpdateDto article)
         {
-            var entity = await RepositoryWrapper.Articles.GetByIdAsync(articleId);
+            var entity = await RepositoryWrapper.Articles.GetArticleAsync(articleId);
             if (entity == null)
             {
                 _logger.LogWarning($"[ArticleIdNotFound]: {articleId}");

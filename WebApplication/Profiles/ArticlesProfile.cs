@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WebApplication.Entities;
+using WebApplication.Entities.Identity.Entities;
 using WebApplication.Models.Articles;
 
 namespace WebApplication.Profiles
@@ -8,7 +9,11 @@ namespace WebApplication.Profiles
     {
         public ArticlesProfile()
         {
-            CreateMap<ArticlesAddOrUpdateDto, Articles>();
+            CreateMap<ArticlesAddOrUpdateDto, Articles>()
+                .ForPath(
+                    dest => dest.User.NickName,
+                    opt => opt.MapFrom(src => src.PublisherName)
+                );
             CreateMap<Articles, ArticlesDto>()
                 .ForMember(
                     dest => dest.CategoryName,
