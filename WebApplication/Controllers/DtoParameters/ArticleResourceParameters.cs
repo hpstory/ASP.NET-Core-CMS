@@ -17,5 +17,6 @@
         }
 # nullable enable
         public string? CategoryName { get; set; }
+        public bool? IsHot { get; set; }
     }
 }

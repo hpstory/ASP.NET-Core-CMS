@@ -18,6 +18,7 @@ namespace WebApplication.Models.Articles
         public string Content { get; set; }
         [Required(ErrorMessage = "请选择分类")]
         public int CategoryID { get; set; }
+        public bool IsHot { get; set; } = false;
         [Required]
         public string PublisherName { get; set; }
     }

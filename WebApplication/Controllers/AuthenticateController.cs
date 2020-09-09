@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +24,9 @@ namespace WebApplication.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-        public IMapper _mapper { get; }
-        public IConfiguration Configuration { get; }       
+        private IMapper Mapper { get; }
+        private IConfiguration Configuration { get; }
+        
 
         public AuthenticateController(
             IConfiguration configuration,
@@ -35,7 +38,7 @@ namespace WebApplication.Controllers
             Configuration = configuration;
             _signInManager = signInManager;
             _userManager = userManager;
-            _mapper = mapper;
+            Mapper = mapper;
         }
 
         [HttpPost("account/login")]
@@ -67,8 +70,14 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("account/signup")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterUser registerUser)
         {
+            User isRegist = await _userManager.FindByNameAsync(registerUser.NickName);
+            if (isRegist != null)
+            {
+                return BadRequest(new { description = "用户名已被注册！" });
+            }
             var userInfo = new User 
             { 
                 NickName = registerUser.NickName, 
@@ -77,11 +86,11 @@ namespace WebApplication.Controllers
             };
             if (string.IsNullOrEmpty(registerUser.Captcha))
             {
-                return BadRequest("验证码为空");
+                return BadRequest(new { description = "验证码为空！" });
             }
             if (registerUser.Captcha != HttpContext.Session.GetString("LoginValidateCode"))
             {
-                return BadRequest("验证码错误");
+                return BadRequest(new { description = "验证码错误！" });
             }
             var result = await _userManager.CreateAsync(userInfo, registerUser.Password);
             if (result.Succeeded)
@@ -89,8 +98,8 @@ namespace WebApplication.Controllers
                 var user = await _userManager.FindByNameAsync(registerUser.PhoneNumber);
                 return GenerateTokenAsync(user);
             }
-            ModelState.AddModelError("Error", result.Errors.FirstOrDefault()?.Description);
-            return BadRequest("注册失败");
+            // ModelState.AddModelError("Error", result.Errors.FirstOrDefault()?.Description);
+            return BadRequest(new { result.Errors.FirstOrDefault()?.Description });
 
         }
         [Route("token")]
@@ -105,7 +114,7 @@ namespace WebApplication.Controllers
             var tokenConfigSection = Configuration.GetSection("Security:Token");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigSection["Key"]));
             var signCredential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var userInfo = _mapper.Map<UserInfoDto>(user);
+            var userInfo = Mapper.Map<UserInfoDto>(user);
             if (state == LoginState.Login)
             {
                 var jwtToken = new JwtSecurityToken(
@@ -141,6 +150,7 @@ namespace WebApplication.Controllers
 
         }
         [HttpGet("getCaptcha")]
+        [HttpCacheExpiration(NoStore = true)]
         public IActionResult GetCaptchaImage()
         {
             Tuple<string, string> captchaCode = CaptchaHelper.GetCaptchaCode();

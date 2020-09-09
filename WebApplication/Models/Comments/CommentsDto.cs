@@ -9,5 +9,6 @@ namespace WebApplication.Models.Comments
         public DateTime Date { get; set; }
         public string Author { get; set; }
         public int ArticleId { get; set; }
+        public string Avatar { get; set; }
     }
 }

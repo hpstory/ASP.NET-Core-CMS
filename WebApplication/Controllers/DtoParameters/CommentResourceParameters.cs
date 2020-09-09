@@ -8,5 +8,6 @@
             get { return 10; }
         }
         public string OrderBy { get; set; } = "Date";
+        public int ArticleId { get; set; }
     }
 }

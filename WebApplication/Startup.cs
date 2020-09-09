@@ -6,6 +6,7 @@ using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -78,7 +79,6 @@ namespace WebApplication
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 6;
 
                 // Ëø¶¨ÉèÖÃ
@@ -123,10 +123,13 @@ namespace WebApplication
             {
                 setup.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
+                setup.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Local;
             });
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(Convert.ToDouble(Configuration["ConnectionRedis:SessionTimeOut"]));
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
             services.AddDbContext<CMSDbContext>(options =>
             {

@@ -2,6 +2,7 @@
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using WebApplication.Controllers.DtoParameters;
 using WebApplication.Entities;
+using WebApplication.Entities.Identity.Entities;
 using WebApplication.Helpers;
 using WebApplication.Infrastructure;
 using WebApplication.Models.Articles;
@@ -25,18 +27,21 @@ namespace WebApplication.Controllers
         private IMapper Mapper { get; }
         private readonly CMSDbContext _dbContext;
         private ILogger _logger;
+        private readonly UserManager<User> _userManager;
 
         public ArticlesController(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             CMSDbContext dbContext,
-            ILogger<ArticlesController> logger
+            ILogger<ArticlesController> logger,
+            UserManager<User> userManager
             )
         {
             RepositoryWrapper = repositoryWrapper;
             Mapper = mapper;
             _dbContext = dbContext;
             _logger = logger;
+            _userManager = userManager;
         }
 
         [HttpCacheExpiration(NoStore = true)]
@@ -86,9 +91,15 @@ namespace WebApplication.Controllers
         public async Task<ActionResult<Articles>> CreateArticleAsync (ArticlesAddOrUpdateDto article)
         {
             var entity = Mapper.Map<Articles>(article);
+            var user = await _userManager.FindByNameAsync(article.PublisherName);
+            var category = RepositoryWrapper.Categories.GetByIdAsync(article.CategoryID);
+            if (category.Result != null)
+            {
+                entity.Category = category.Result;
+            }
+            entity.User = user;
             RepositoryWrapper.Articles.Create(entity);
             await RepositoryWrapper.Articles.SaveAsync();
-
             var returnDto = Mapper.Map<ArticlesDto>(entity);
 
             return CreatedAtRoute(nameof(GetArticlesAsync), new { articleId = returnDto.ID }, returnDto);

@@ -13,8 +13,6 @@ namespace WebApplication.Entities
         public string Content { get; set; }
         [Required]
         public DateTime PublishTime { get; set; } = DateTime.Now;
-        [Required]
-        public int ArticleID { get; set; }
         public User User { get; set; }
         public Articles Articles { get; set; }
     }

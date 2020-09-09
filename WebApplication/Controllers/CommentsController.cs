@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Text.Encodings.Web;
@@ -6,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using WebApplication.Controllers.DtoParameters;
 using WebApplication.Entities;
+using WebApplication.Entities.Identity.Entities;
 using WebApplication.Helpers;
 using WebApplication.Infrastructure;
 using WebApplication.Models.Comments;
@@ -14,22 +17,27 @@ namespace WebApplication.Controllers
 {
     [ApiController]
     [Route("api")]
+    [HttpCacheExpiration]
     public class CommentsController : ControllerBase
     {
         public IRepositoryWrapper RepositoryWrapper { get; }
         public IMapper Mapper { get; }
+        private readonly UserManager<User> _userManager;
 
         private readonly CMSDbContext _dbContext;
         public CommentsController(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
-            CMSDbContext dbContext
+            CMSDbContext dbContext,
+            UserManager<User> userManager
             )
         {
             RepositoryWrapper = repositoryWrapper;
             Mapper = mapper;
             _dbContext = dbContext;
+            _userManager = userManager;
         }
+        [HttpCacheExpiration(NoStore = true)]
         [HttpGet("comments", Name = nameof(GetCommentsAsync))]
         public async Task<ActionResult<IEnumerable<CommentsDto>>> GetCommentsAsync([FromQuery] CommentResourceParameters parameters)
         {
@@ -59,6 +67,13 @@ namespace WebApplication.Controllers
         public async Task<ActionResult<CommentsDto>> CreateCommentAsync(CommentsAddDto comment)
         {
             var entity = Mapper.Map<Comments>(comment);
+            var user = await _userManager.FindByNameAsync(comment.Author);
+            entity.User = user;
+            var article = RepositoryWrapper.Articles.GetByIdAsync(comment.ArticleId);
+            if (article.Result != null)
+            {
+                entity.Articles = article.Result;
+            }
             RepositoryWrapper.Comments.Create(entity);
             await RepositoryWrapper.Articles.SaveAsync();
             var returnDto = Mapper.Map<CommentsDto>(entity);

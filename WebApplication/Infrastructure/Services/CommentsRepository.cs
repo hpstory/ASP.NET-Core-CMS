@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.Controllers.DtoParameters;
@@ -24,7 +24,9 @@ namespace WebApplication.Infrastructure.Services
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            var queryExpression = DbContext.Set<Comments>() as IQueryable<Comments>;
+
+            var queryExpression = DbContext.Set<Comments>()
+                .Include(u => u.User).Where(a => a.Articles.ID == parameters.ArticleId);
 
             var mappingDictionary = _propertyMappingService.GetPropertyMapping<CommentsDto, Comments>();
             queryExpression = queryExpression.ApplySort(parameters.OrderBy, mappingDictionary);

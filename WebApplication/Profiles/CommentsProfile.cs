@@ -18,6 +18,18 @@ namespace WebApplication.Profiles
                 .ForMember(
                     dest => dest.Date,
                     opt => opt.MapFrom(src => src.PublishTime)
+                )
+                .ForMember(
+                    dest => dest.ArticleId,
+                    opt => opt.MapFrom(src => src.Articles.ID)
+                )
+                .ForMember(
+                    dest => dest.Author,
+                    opt => opt.MapFrom(src => src.User.NickName)
+                )
+                .ForMember(
+                    dest => dest.Avatar,
+                    opt => opt.MapFrom(src => src.User.Avatar)
                 );
         }
     }

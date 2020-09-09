@@ -33,6 +33,10 @@ namespace WebApplication.Infrastructure.Services
             {
                 queryExpression = queryExpression.Where(c => c.Category.Name == parameters.CategoryName);
             }
+            if (parameters.IsHot != null)
+            {
+                queryExpression = queryExpression.Where(c => c.IsHot == parameters.IsHot);
+            }
             if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
             {
                 queryExpression = queryExpression.Where(

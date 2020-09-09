@@ -236,9 +236,6 @@ namespace WebApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ArticleID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ArticlesID")
                         .HasColumnType("int");
 
