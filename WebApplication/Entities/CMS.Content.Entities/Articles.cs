@@ -25,5 +25,8 @@ namespace WebApplication.Entities
         [ForeignKey("CategoryID")]
         public Categories Category { get; set; }
         public ICollection<Comments> Comments { get; set; }
+        public int LikeCount { get; set; } = 0;
+        public int DislikeCount { get; set; } = 0;
+        public int CollectCount { get; set; } = 0;
     }
 }

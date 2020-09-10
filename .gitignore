@@ -7,3 +7,5 @@
 /WebApplication/UploadFile
 /WebApplication/Migrations/20200908092652_comment.cs
 /WebApplication/Migrations/20200908092652_comment.Designer.cs
+/WebApplication/Migrations/20200910081218_article.cs
+/WebApplication/Migrations/20200910081218_article.Designer.cs

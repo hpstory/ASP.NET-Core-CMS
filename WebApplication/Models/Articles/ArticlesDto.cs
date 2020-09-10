@@ -13,5 +13,8 @@ namespace WebApplication.Models.Articles
         public string CategoryName { get; set; }
         public string PublisherName { get; set; }
         public bool IsHot { get; set; }
+        public int LikeCount { get; set; }
+        public int DislikeCount { get; set; }
+        public int CollectCount { get; set; }
     }
 }

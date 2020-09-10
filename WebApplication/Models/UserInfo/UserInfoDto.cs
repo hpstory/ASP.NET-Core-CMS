@@ -7,7 +7,6 @@ namespace WebApplication.Models.UserInfo
 {
     public class UserInfoDto
     {
-        public string UserId { get; set; }
         public string Avatar { get; set; }
         public string NickName { get; set; }
         public string UserName { get; set; }

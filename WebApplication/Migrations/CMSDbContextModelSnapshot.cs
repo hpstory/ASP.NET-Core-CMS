@@ -157,6 +157,9 @@ namespace WebApplication.Migrations
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
+                    b.Property<int>("CollectCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -164,8 +167,14 @@ namespace WebApplication.Migrations
                     b.Property<string>("Cover")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("DislikeCount")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsHot")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime(6)");

@@ -8,5 +8,6 @@ namespace WebApplication.Infrastructure
         ICategoriesRepository Categories { get; }
         IArticlesRepository Articles { get; }
         ICommentsRepository Comments { get; }
+        IUsersRepository Users { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 using WebApplication.Entities.Enum;
 using WebApplication.Entities.Identity.Entities;
 using WebApplication.Helpers;
+using WebApplication.Infrastructure;
 using WebApplication.Models.UserInfo;
 
 namespace WebApplication.Controllers
@@ -24,6 +26,8 @@ namespace WebApplication.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private IRepositoryWrapper RepositoryWrapper { get; }
         private IMapper Mapper { get; }
         private IConfiguration Configuration { get; }
         
@@ -32,13 +36,17 @@ namespace WebApplication.Controllers
             IConfiguration configuration,
             SignInManager<User> signInManager,
             UserManager<User> userManager,
-            IMapper mapper
+            RoleManager<IdentityRole>roleManager,
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper
             )
         {
+            RepositoryWrapper = repositoryWrapper;
             Configuration = configuration;
             _signInManager = signInManager;
             _userManager = userManager;
             Mapper = mapper;
+            _roleManager = roleManager;
         }
 
         [HttpPost("account/login")]
@@ -149,6 +157,60 @@ namespace WebApplication.Controllers
             }
 
         }
+
+        [HttpPut("account/editProfile")]
+        [HttpCacheExpiration]
+        [HttpCacheValidation]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult> UpdateUserInfoAsync(UserInfoAddDto userInfo)
+        {
+            if (userInfo == null)
+            {
+                throw new ArgumentNullException(nameof(userInfo));
+            }
+            var result = await _userManager.FindByNameAsync(userInfo.UserName);
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            result.NickName = userInfo.NickName;
+            result.Avatar = userInfo.Avatar;
+            result.BirthDate = userInfo.BirthDate;
+            result.City = userInfo.City;
+            result.Province = userInfo.Province;
+            RepositoryWrapper.Users.Update(result);
+            await RepositoryWrapper.Users.SaveAsync();
+            return NoContent();
+        }
+        [HttpGet("role")]
+        public IActionResult GetRolesAsync()
+        {
+            var result = _roleManager.Roles.ToList();
+            return Ok(result);
+        }
+
+        [HttpPost("createRole")]
+        public async Task<ActionResult> CreateRoleAsync(string role, string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var roleResult = await _roleManager.CreateAsync(new IdentityRole(role));
+            if (roleResult.Succeeded)
+            {
+                var userResult = await _userManager.AddToRoleAsync(user, role);
+                if (userResult.Succeeded)
+                {
+                    return CreatedAtRoute(nameof(GetRolesAsync), role);
+                }
+                return BadRequest(userResult.Errors);
+            }
+            return BadRequest(roleResult.Errors);
+           
+        }
+
         [HttpGet("getCaptcha")]
         [HttpCacheExpiration(NoStore = true)]
         public IActionResult GetCaptchaImage()

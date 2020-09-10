@@ -10,6 +10,7 @@ namespace WebApplication.Infrastructure
         private readonly ICategoriesRepository _categoriesRepository = null;
         private readonly IArticlesRepository _articlesRepository = null;
         private readonly ICommentsRepository _commentsRepository = null;
+        private readonly IUsersRepository _usersRepository = null;
         public CMSDbContext DbContext { get; }
         private readonly IPropertyMappingService _propertyMappingService;
         public RepositoryWrapper(CMSDbContext dbContext, IPropertyMappingService propertyMappingService)
@@ -21,5 +22,6 @@ namespace WebApplication.Infrastructure
         public ICategoriesRepository Categories => _categoriesRepository ?? new CategoriesRepository(DbContext);
         public IArticlesRepository Articles => _articlesRepository ?? new ArticlesRepository(DbContext, _propertyMappingService);
         public ICommentsRepository Comments => _commentsRepository ?? new CommentsRepository(DbContext, _propertyMappingService);
+        public IUsersRepository Users => _usersRepository ?? new UsersRepository(DbContext);
     }
 }
