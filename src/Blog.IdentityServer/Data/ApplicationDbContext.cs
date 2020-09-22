@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Blog.IdentityServer.Models;
 
-namespace Blog.IdentityServer.Data
+namespace IdentityServerAspNetIdentity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

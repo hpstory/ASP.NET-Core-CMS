@@ -1,0 +1,90 @@
+<p>aaaaaaaaaaaa</p>
+<nz-layout class="left">
+  <nz-layout class="inner-layout">
+    <nz-content>
+      <nz-carousel nzAutoPlay>
+        <div nz-carousel-content *ngFor="let item of bannerArray">
+          <a [href]="item.link"><img [src]="item.imageUrl"></a>
+          <div class="cycle-overlay">{{item.title}}</div>
+        </div>
+      </nz-carousel>
+      <nz-list nzItemLayout="vertical" class="article-list">
+        <nz-list-item *ngFor="let item of listOfAriticle">
+          <nz-list-item-meta>
+            <nz-list-item-meta-title>
+              <a [routerLink]="['../newsDetail']" [queryParams]="{ id: item.id }" [routerLinkActive]="['active']" ><b>{{ item.title }}</b></a>
+            </nz-list-item-meta-title>
+          </nz-list-item-meta>
+          <span>{{ item.content | contextSplit | slice: 0: 200 }}</span>
+          <ul nz-list-item-actions>
+            <nz-list-item-action><i nz-icon nzType="star-o" style="margin-right: 8px;" (click)="countIncrease(item.id, 'collect')" nzGhost></i>{{ item.collectCount }}</nz-list-item-action>
+            <nz-list-item-action><i nz-icon nzType="like" style="margin-right: 8px;" (click)="countIncrease(item.id, 'like')"></i>{{ item.likeCount }}</nz-list-item-action>
+            <nz-list-item-action><i nz-icon nzType="dislike" style="margin-right: 8px;" (click)="countIncrease(item.id, 'dislike')"></i>{{ item.dislikeCount }}</nz-list-item-action>
+          </ul>
+          <nz-list-item-extra >
+            <div class="cover" *ngIf="item.cover">
+              <img width="272" alt="logo" [src]="item.cover"/>
+            </div>
+          </nz-list-item-extra>
+        </nz-list-item>
+        <nz-skeleton *ngIf="loading" [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzLoading]="true"> </nz-skeleton>
+        <div class="loadmore" nz-list-load-more>
+          <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">loading more</button>
+        </div>
+      </nz-list>
+    </nz-content>
+  </nz-layout>
+  <nz-sider nzWidth="400px"  nzBreakpoint="md">
+    <div class="title-group">
+      <span class="title">更多内容</span>
+      <a href="#" class="more">>>></a>
+    </div>
+    <div class="advertise-group">
+      <a href="#">
+          <img src="../assets/image/more.jpg">
+      </a>
+    </div>
+    <div class="platform-group">
+      <div class="title-group">
+          <span class="title">立即下载</span>
+      </div>
+    </div>
+    <div class="download-platform">
+      <ul class="left-group">
+          <li class="zhihu">
+              <a href="https://www.zhihu.com/" target="_blank">知乎首页</a>
+          </li>
+          <li class="weibo">
+              <a href="https://weibo.com/" target="_blank">微博首页</a>
+          </li>
+          <li class="bilibili">
+              <a href="https://www.bilibili.com/" target="_blank">B站首页</a>
+          </li>
+      </ul>
+      <div class="right-group">
+          <p class="desc">
+              扫码关注微信公众平台
+          </p>
+      </div>
+    </div>
+    <div class="hot-news-group">
+      <div class="title-group">
+          <span class="title">热门推荐</span>
+      </div>
+      <nz-list nzItemLayout="vertical">
+        <nz-list-item *ngFor="let item of hotAricles">
+          <nz-list-item-meta>
+            <nz-list-item-meta-title>
+              <a [routerLink]="['/index/newsDetail']" [queryParams]="{ id: item.id }" routerLinkActive="active" >{{ item.title }}</a>
+            </nz-list-item-meta-title>
+          </nz-list-item-meta>
+          <nz-list-item-extra>
+            <div class="hot-cover" *ngIf="item.cover">
+              <img alt="logo" [src]="item.cover" />
+            </div>
+          </nz-list-item-extra>
+        </nz-list-item>
+      </nz-list>
+    </div>
+  </nz-sider>
+</nz-layout>

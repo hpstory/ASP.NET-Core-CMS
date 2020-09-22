@@ -1,0 +1,125 @@
+nz-carousel {
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+  width: 750px;
+  height: 300px;
+  margin: 10px;
+  img{
+    width: 100%
+  }
+  .cycle-overlay{
+    position: absolute;
+    top: 280px;
+    z-index: 500;
+    background: url(//i0.jrjimg.cn/homeindex_v2015/bg24.png) repeat;
+    width: 100%;
+    color: #fff;
+  }
+}
+.article-list{
+  span {
+    margin-left: 23px;
+  }
+}
+.loadmore {
+  text-align: center;
+  margin-top: 12px;
+  height: 32px;
+  line-height: 32px;
+}
+
+ul {
+  li {
+    list-style: none;
+  }
+}
+
+.title-group{
+    padding: 20px;
+    overflow: hidden;
+
+    .title{
+        float: left;
+        font-size: 18px;
+    }
+
+    .more{
+        float: right;
+        font-size: 14px;
+    }
+}
+
+.advertise-group{
+
+    img{
+      width: 390px;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+}
+
+.download-platform{
+    padding: 0 20px;
+    overflow: hidden;
+
+    .left-group{
+        width: 190px;
+        float: left;
+
+        li{
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            background: url("~/assets/image/side-icon.png");
+            background-repeat: no-repeat;
+            background-size: 26%;
+            margin-bottom: 20px;
+            overflow: hidden;
+
+            a{
+                float: left;
+                margin-left: 64px;
+                font-size: 14px;
+            }
+        }
+
+        .zhihu{
+            background-position: 0 0;
+        }
+
+        .weibo{
+            background-position: 0 -47px ;
+        }
+
+        .bilibili{
+            background-position: 0 -100px;
+        }
+    }
+
+    .right-group{
+        float: right;
+        width: 150px;
+        background: url("~/assets/image/Qrcode.png");
+        background-size: 100%;
+        background-repeat: no-repeat;
+
+        .desc{
+            margin-top: 150px;
+            font-size: 12px;
+            text-align: center;
+        }
+    }
+}
+
+.hot-news-group{
+  nz-list {
+    img{
+      margin-right: 5px;
+      width: 130px;
+    }
+    a{
+      margin-left: 23px;
+    }
+  }
+}
