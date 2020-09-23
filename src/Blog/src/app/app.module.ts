@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
@@ -15,6 +15,9 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { ContextSplitPipe } from './pipes/context-split.pipe';
+import { IndexComponent } from './components/index/index.component';
+import { AuthorizationHeaderInterceptor } from './services/oidc/anthorization-header.interceptor';
+import { ServicesModule } from './services/services.module';
 
 registerLocaleData(zh);
 
@@ -25,17 +28,27 @@ registerLocaleData(zh);
     ProfileComponent,
     PageNotFoundComponent,
     NewsDetailComponent,
-    ContextSplitPipe
+    ContextSplitPipe,
+    IndexComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     NgZorroAntdModule,
+    ServicesModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }],
+  providers: [
+    { provide: NZ_I18N, useValue: zh_CN },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizationHeaderInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

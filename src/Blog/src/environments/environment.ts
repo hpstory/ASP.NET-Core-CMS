@@ -12,11 +12,11 @@ export const environment = {
   apiBase,
   openIdConnectSettings: {
     authority: `${idpBase}`,
-    client_id: "angular-client",
+    client_id: "angular-front-client",
     redirect_uri: `${angularBase}/signin-oidc`,
     post_logout_redirect_uri: `${angularBase}/`,
-    slient_redirect_uri: `${angularBase}/redirect_silentrenew`,
-    scope: "scope1 openid profile address email phone",
+    slient_redirect_uri: `${angularBase}/redirect-silent-renew`,
+    scope: "blog.api openid profile",
     response_type: "id_token token",
     automaticSilentRenew: true
   }

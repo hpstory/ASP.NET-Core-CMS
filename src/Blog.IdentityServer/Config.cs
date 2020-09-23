@@ -31,8 +31,14 @@ namespace Blog.IdentityServer
             {
                 new ApiResource
                 {
-                    Name = "api",
+                    Name = "frontend.api",
                     Scopes = { "blog.api" },
+                    ApiSecrets = { new Secret("0ed8ca6e-6dcf-4d46-b38f-dfc784e362cd".Sha256()) }
+                },
+                new ApiResource
+                {
+                    Name = "backend.api",
+                    Scopes = { "blog.cms" },
                     ApiSecrets = { new Secret("0ed8ca6e-6dcf-4d46-b38f-dfc784e362cd".Sha256()) }
                 }
             };
@@ -53,8 +59,9 @@ namespace Blog.IdentityServer
                     RedirectUris =
                     {
                         "http://localhost:4200/signin-oidc",
-                        "http://localhost:4200/redirect-silentrenew"
+                        "http://localhost:4200/redirect-silent-renew"
                     },
+                    FrontChannelLogoutUri = "http://localhost:4200",
                     PostLogoutRedirectUris =
                     {
                         "http://localhost:4200/"
@@ -66,13 +73,12 @@ namespace Blog.IdentityServer
 
                     AllowedScopes = 
                     {
+                        "blog.api",
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "blog.api", 
                     }
                 },
 
-                // interactive client using code flow + pkce
                 new Client
                 {
                     ClientId = "angular-cms-client",
@@ -82,19 +88,20 @@ namespace Blog.IdentityServer
                     AllowedGrantTypes = GrantTypes.Implicit,
                     RequireConsent = true,
                     AccessTokenLifetime = 60 * 5,
-                    RedirectUris = 
-                    { 
-                        "https://localhost:4201/signin-oidc" 
+                    RedirectUris =
+                    {
+                        "https://localhost:4201/signin-oidc",
+                        "http://localhost:4201/redirect-silent-renew"
                     },
-                    PostLogoutRedirectUris = 
-                    { 
-                        "https://localhost:4201/signout-callback-oidc" 
+                    PostLogoutRedirectUris =
+                    {
+                        "http://localhost:4201/"
                     },
                     AllowedCorsOrigins =
                     {
                         "http://localhost:4201"
                     },
-                    AllowedScopes = 
+                    AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,

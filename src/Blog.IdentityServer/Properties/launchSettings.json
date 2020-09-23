@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "SelfHost": {
+    "Blog.IdentityServer": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

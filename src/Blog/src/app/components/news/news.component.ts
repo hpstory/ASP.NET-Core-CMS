@@ -21,12 +21,13 @@ export class NewsComponent implements OnInit {
   hotAricles: ArticleListItem[];
   loadMoreUrl: string = "";
 
+
   constructor(
     @SkipSelf()
     private bannerListService: BannerListService,
     private articleListService: ArticleListService,
     private http: HttpClient
-  ) { }
+    ) { }
 
   ngOnInit(): void {
     this.getBannersTable();
@@ -49,8 +50,8 @@ export class NewsComponent implements OnInit {
     this.articleListService.getArticles(pageNumber, pageSize, filter).subscribe(resp => {
       this.loading = false;
       var pagination = JSON.parse(resp.headers.get("x-pagination"));
-      this.total = pagination["totalCount"];
-      this.loadMoreUrl = pagination["nextPageLink"]
+     // this.total = pagination["totalCount"];
+      //this.loadMoreUrl = pagination["nextPageLink"]
       this.listOfAriticle = resp.body;
     })
   }
@@ -63,7 +64,8 @@ export class NewsComponent implements OnInit {
     this.articleListService.getArticles(pageNumber, pageSize, filter).subscribe(resp => {
       this.loading = false;
       var pagination = JSON.parse(resp.headers.get("x-pagination"));
-      this.total = pagination["totalCount"];
+      console.log(pagination)
+      //this.total = pagination["totalCount"];
       this.hotAricles = resp.body;
     })
   }
@@ -84,5 +86,4 @@ export class NewsComponent implements OnInit {
   countIncrease(id: number, type: string){
     // return clickCount++;
   }
-
 }

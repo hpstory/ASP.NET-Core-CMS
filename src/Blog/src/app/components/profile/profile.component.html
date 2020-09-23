@@ -1,1 +1,86 @@
-<p>profile works!</p>
+<form nz-form [formGroup]="profileForm" (ngSubmit)="submitForm()">
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">头像</nz-form-label>
+    <nz-form-control>
+      <nz-upload
+      nzAction={{uploadUrl}}
+      nzName="formFile"
+      nzListType="picture-card"
+      [nzShowUploadList]="false"
+      [nzPreview]="handlePreview"
+      [nzBeforeUpload]="beforeUpload"
+      (nzChange)="getImageUrl($event)"
+      class="cover-upload"
+      >
+        <div *ngIf="avatarUrl == null">
+          <i nz-icon nzType="plus"></i>
+          <div class="ant-upload-text">上传封面</div>
+        </div>
+        <div *ngIf="avatarUrl != null">
+          <img [src]="avatarUrl" [ngStyle]="{ width: '100%' }">
+        </div>
+      </nz-upload>
+      <nz-modal class="preview"
+      [nzVisible]="previewVisible"
+      [nzContent]="modalContent"
+      [nzFooter]="null"
+      (nzOnCancel)="previewVisible = false"
+      >
+        <ng-template #modalContent>
+          <img [src]="avatarUrl" [ngStyle]="{ width: '100%' }" />
+        </ng-template>
+      </nz-modal>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>用户名</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <input nz-input formControlName="nickName" id="nickName" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">生日</nz-form-label>
+    <nz-form-control [nzSpan]="12">
+      <nz-date-picker
+      [nzFormat]="dateFormat"
+      [nzMode]="dateMode"
+      (nzOnOpenChange)="handleDateOpenChange($event)"
+      formControlName="birthDay">
+      </nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">城市</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-cascader [(ngModel)]="values" [nzLoadData]="loadData" (ngModelChange)="onChanges($event)"> </nz-cascader>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">
+      <span>
+        性别
+      </span>
+    </nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-radio-group [(ngModel)]="gender">
+        <label nz-radio nzValue="male">男</label>
+        <label nz-radio nzValue="female">女</label>
+        <label nz-radio nzValue="secret">保密</label>
+      </nz-radio-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control >
+      <div nz-row [nzGutter]="1">
+        <button nz-col nzSpan="3" nzOffset="16" nz-button nzType="default">
+          <a [routerLink]="['/cms/articleList']" routerLinkActive="active" >返回</a>
+        </button>
+        <button
+        nz-popconfirm nzPopconfirmTitle="确认提交？"
+        (nzOnConfirm)="submitForm()"
+        [disabled]="!profileForm.valid"
+        nz-col nzSpan="3" nzOffset="1" nz-button nzType="primary">提交</button>
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+</form>

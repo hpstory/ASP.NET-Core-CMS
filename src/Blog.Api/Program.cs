@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace Blog.Api
 {
@@ -13,6 +14,7 @@ namespace Blog.Api
     {
         public static void Main(string[] args)
         {
+            NLogBuilder.ConfigureNLog("nlog.config");
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -21,6 +23,11 @@ namespace Blog.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Information);
+                    logging.AddConsole();
+                }).UseNLog();
     }
 }

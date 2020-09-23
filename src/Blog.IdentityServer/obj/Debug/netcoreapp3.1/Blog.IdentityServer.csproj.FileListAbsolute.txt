@@ -106,3 +106,4 @@ E:\project\src\Blog.IdentityServer\bin\Debug\netcoreapp3.1\IdentityServer4.Entit
 E:\project\src\Blog.IdentityServer\obj\Debug\netcoreapp3.1\Blog.IdentityServer.csproj.CoreCompileInputs.cache
 E:\project\src\Blog.IdentityServer\obj\Debug\netcoreapp3.1\Blog.IdentityServer.MvcApplicationPartsAssemblyInfo.cs
 E:\project\src\Blog.IdentityServer\obj\Debug\netcoreapp3.1\Blog.IdentityServer.MvcApplicationPartsAssemblyInfo.cache
+E:\project\src\Blog.IdentityServer\obj\Debug\netcoreapp3.1\Blog.IdentityServer.csprojAssemblyReference.cache
