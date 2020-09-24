@@ -16,6 +16,10 @@ using IdentityServerAspNetIdentity.Data;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using System.Linq;
+using System;
+using IdentityModel;
+using Blog.IdentityServer.Auths;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.IdentityServer
 {
@@ -32,15 +36,51 @@ namespace Blog.IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // 兼容其他设备登陆使用
+            services.AddSameSiteCookiePolicy();
+
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddControllersWithViews();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("MySQLConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => 
+            {
+                options.User = new UserOptions
+                {
+                    RequireUniqueEmail = true,
+                    AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@+"
+                };
+                options.Password = new PasswordOptions
+                {
+                    RequiredLength = 6,
+                    RequireDigit = true,
+                    RequireLowercase = true,
+                    RequireNonAlphanumeric = false,
+                    RequireUppercase = false
+                };
+                options.Lockout = new LockoutOptions
+                {
+                    AllowedForNewUsers = true,
+                    DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1),
+                    MaxFailedAccessAttempts = 5
+                };
+                options.SignIn = new SignInOptions
+                {
+                    RequireConfirmedEmail = true,
+                    RequireConfirmedPhoneNumber = true
+                };
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(60);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             var builder = services.AddIdentityServer(options =>
             {
@@ -67,26 +107,49 @@ namespace Blog.IdentityServer
                 //.AddInMemoryClients(Config.Clients)
                 //.AddInMemoryApiResources(Config.ApiResources);
 
-            // not recommended for production - you need to store your key material somewhere secure
-            builder.AddDeveloperSigningCredential();
+            if (Environment.IsDevelopment())
+            {
+                builder.AddDeveloperSigningCredential();
+            }
+            else
+            {
+                builder.AddSigningCredential("");
+            }
 
-            services.AddAuthentication();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("guest", builder =>
+                {
+                    builder.AddRequirements(new ClaimRequirement("guest"));
+                });
+                options.AddPolicy("staff", builder =>
+                {
+                    builder.AddRequirements(new ClaimRequirement("staff"));
+                });
+                options.AddPolicy("sadmin", builder =>
+                {
+                    builder.AddRequirements(new ClaimRequirement("sadmin"));
+                });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
         }
 
         public void Configure(IApplicationBuilder app)
         {
             // InitializeDatabase(app);
-
+            app.UseCookiePolicy();
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
-            
+            app.UseSession();
             app.UseStaticFiles();
 
             app.UseRouting();
             app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

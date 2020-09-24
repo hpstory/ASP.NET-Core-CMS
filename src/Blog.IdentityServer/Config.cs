@@ -76,6 +76,7 @@ namespace Blog.IdentityServer
                         "blog.api",
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        "roles"
                     }
                 },
 
