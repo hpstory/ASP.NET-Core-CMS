@@ -91,7 +91,7 @@ namespace Blog.IdentityServer
                     AccessTokenLifetime = 60 * 5,
                     RedirectUris =
                     {
-                        "https://localhost:4201/signin-oidc",
+                        "http://localhost:4201/signin-oidc",
                         "http://localhost:4201/redirect-silent-renew"
                     },
                     PostLogoutRedirectUris =

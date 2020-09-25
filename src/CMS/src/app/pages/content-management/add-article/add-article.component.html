@@ -1,0 +1,107 @@
+<form nz-form [formGroup]="articleForm">
+  <div nz-row>
+    <div nz-col nzSpan="10">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">封面</nz-form-label>
+        <nz-form-control>
+          <nz-upload
+          nzAction={{uploadUrl}}
+          nzName="formFile"
+          nzListType="picture-card"
+          [(nzFileList)]="fileList"
+          [nzShowButton]="fileList.length < 1"
+          [nzPreview]="handlePreview"
+          [nzBeforeUpload]="beforeUpload"
+          (nzChange)="getImageUrl($event)"
+          class="cover-upload"
+          >
+            <div *ngIf="imageUrl == null">
+              <i nz-icon nzType="plus"></i>
+              <div class="ant-upload-text">上传封面</div>
+            </div>
+            <div *ngIf="imageUrl != null">
+              <img [src]="imageUrl" [ngStyle]="{ width: '100%' }">
+            </div>
+          </nz-upload>
+          <nz-modal class="preview"
+          [nzVisible]="previewVisible"
+          [nzContent]="modalContent"
+          [nzFooter]="null"
+          (nzOnCancel)="previewVisible = false"
+          >
+            <ng-template #modalContent>
+              <img [src]="imageUrl" [ngStyle]="{ width: '100%' }" />
+            </ng-template>
+          </nz-modal>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzRequired>标题</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入标题！">
+          <input nz-input formControlName="title" placeholder="请输入" required />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">作者</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <input nz-input formControlName="author" placeholder="请输入作者！" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzRequired>发布时间</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-date-picker
+          [nzFormat]="dateFormat"
+          [nzMode]="dateMode"
+          nzShowTime
+          (nzOnOpenChange)="handleDateOpenChange($event)"
+          formControlName="publishDate">
+          </nz-date-picker>
+        </nz-form-control>
+        <nz-form-label>操作</nz-form-label>
+        <nz-form-control>
+          <label nz-checkbox formControlName="isHot">热门</label>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzRequired>分类</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择分类！">
+          <nz-select nzPlaceHolder="请选择分类" formControlName="categoryId">
+            <div *ngFor="let item of categories">
+              <nz-option nzValue={{item.id}} nzLabel={{item.name}}></nz-option>
+            </div>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control >
+          <div nz-row [nzGutter]="1">
+            <button nz-col nzSpan="3" nzOffset="16" nz-button nzType="default">
+              <a [routerLink]="['/cms/articleList']" routerLinkActive="active" >返回</a>
+            </button>
+            <button
+            [nzLoading]="isOkLoading"
+            nz-popconfirm nzPopconfirmTitle="确认提交？"
+            (nzOnConfirm)="submitForm(articleForm.value)"
+            [disabled]="!articleForm.valid"
+            nz-col nzSpan="3" nzOffset="1" nz-button nzType="primary">提交</button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="14">
+      <nz-form-item>
+        <nz-form-label nzRequired>正文</nz-form-label>
+        <nz-form-control [nzSpan]="22">
+          <div class="wangEditor-box">
+            <div id="editorMenu"></div>
+            <div id="editor" style="height: 400px">
+              <p>{{ defaultMessage }}</p>
+            </div>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+</form>
+

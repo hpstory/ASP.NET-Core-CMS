@@ -24,7 +24,7 @@ namespace Blog.IdentityServer
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseMySql(connectionString));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -54,6 +54,7 @@ namespace Blog.IdentityServer
                             new Claim(JwtClaimTypes.GivenName, "Alice"),
                             new Claim(JwtClaimTypes.FamilyName, "Smith"),
                             new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
+                            new Claim(JwtClaimTypes.Role, "sadmin"),
                         }).Result;
                 if (!result.Succeeded)
                 {
@@ -86,7 +87,8 @@ namespace Blog.IdentityServer
                             new Claim(JwtClaimTypes.GivenName, "Bob"),
                             new Claim(JwtClaimTypes.FamilyName, "Smith"),
                             new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
-                            new Claim("location", "somewhere")
+                            new Claim("location", "somewhere"),
+                            new Claim(JwtClaimTypes.Role, "guest")
                         }).Result;
                 if (!result.Succeeded)
                 {

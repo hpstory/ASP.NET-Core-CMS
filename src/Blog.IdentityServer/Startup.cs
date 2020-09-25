@@ -69,7 +69,7 @@ namespace Blog.IdentityServer
                 options.SignIn = new SignInOptions
                 {
                     RequireConfirmedEmail = true,
-                    RequireConfirmedPhoneNumber = true
+                    // RequireConfirmedPhoneNumber = true
                 };
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -137,7 +137,7 @@ namespace Blog.IdentityServer
 
         public void Configure(IApplicationBuilder app)
         {
-            // InitializeDatabase(app);
+            //InitializeDatabase(app);
             app.UseCookiePolicy();
             if (Environment.IsDevelopment())
             {
@@ -159,47 +159,45 @@ namespace Blog.IdentityServer
 
         //private void InitializeDatabase(IApplicationBuilder app)
         //{
-        //    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+        //    using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        //    serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+        //    var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+        //    context.Database.Migrate();
+        //    if (!context.Clients.Any())
         //    {
-        //        serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-        //        var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-        //        context.Database.Migrate();
-        //        if (!context.Clients.Any())
+        //        foreach (var client in Config.Clients)
         //        {
-        //            foreach (var client in Config.Clients)
-        //            {
-        //                context.Clients.Add(client.ToEntity());
-        //            }
-        //            context.SaveChanges();
+        //            context.Clients.Add(client.ToEntity());
         //        }
+        //        context.SaveChanges();
+        //    }
 
-        //        if (!context.IdentityResources.Any())
+        //    if (!context.IdentityResources.Any())
+        //    {
+        //        foreach (var resource in Config.IdentityResources)
         //        {
-        //            foreach (var resource in Config.IdentityResources)
-        //            {
-        //                context.IdentityResources.Add(resource.ToEntity());
-        //            }
-        //            context.SaveChanges();
+        //            context.IdentityResources.Add(resource.ToEntity());
         //        }
+        //        context.SaveChanges();
+        //    }
 
-        //        if (!context.ApiScopes.Any())
+        //    if (!context.ApiScopes.Any())
+        //    {
+        //        foreach (var resource in Config.ApiScopes)
         //        {
-        //            foreach (var resource in Config.ApiScopes)
-        //            {
-        //                context.ApiScopes.Add(resource.ToEntity());
-        //            }
-        //            context.SaveChanges();
+        //            context.ApiScopes.Add(resource.ToEntity());
         //        }
+        //        context.SaveChanges();
+        //    }
 
-        //        if (!context.ApiResources.Any())
+        //    if (!context.ApiResources.Any())
+        //    {
+        //        foreach (var resource in Config.ApiResources)
         //        {
-        //            foreach (var resource in Config.ApiResources)
-        //            {
-        //                context.ApiResources.Add(resource.ToEntity());
-        //            }
-        //            context.SaveChanges();
+        //            context.ApiResources.Add(resource.ToEntity());
         //        }
+        //        context.SaveChanges();
         //    }
         //}
     }

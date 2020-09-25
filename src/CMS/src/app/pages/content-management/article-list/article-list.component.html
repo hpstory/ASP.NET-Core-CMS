@@ -1,0 +1,58 @@
+<h3 [ngStyle]="{ margin: '16px 0' }">资讯列表</h3>
+<button nz-button nzType="primary">
+  <a [routerLink]="['/cms/addArticle']" routerLinkActive="active">
+    添加资讯
+  </a>
+</button>
+<nz-table nzShowSizeChanger [nzData]="listOfAriticle"
+  [nzFrontPagination]="false" [nzLoading]="loading"
+  [nzTotal]="total" [nzPageSize]="pageSize" [nzPageIndex]="pageNumber"
+  (nzQueryParams)="onQueryParamsChange($event)">
+  <thead>
+    <tr>
+      <th nzColumnKey="index">序号</th>
+      <th nzColumnKey="title" nzCustomFilter>
+        标题
+        <!-- <nz-filter-trigger [(nzVisible)]="visible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger> -->
+      </th>
+      <th nzColumnKey="categoryName" [nzFilters]="filterCategory" [nzFilterFn]="true" [nzFilterMultiple]="false">分类</th>
+      <th>热门</th>
+      <th nzColumnKey="pubTime">发布时间</th>
+      <th>账号</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of listOfAriticle; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ data.title }}</td>
+      <td>{{ data.categoryName }}</td>
+      <td *ngIf="data.isHot">是</td>
+      <td *ngIf="!data.isHot">否</td>
+      <td>{{ data.publishDate }}</td>
+      <td>{{ data.publisherName }}</td>
+      <td>
+        <ng-container>
+          <td>
+            <a [routerLink]="['/cms/editArticle']" [queryParams]="{ id: data.id }" routerLinkActive="active" >编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-popconfirm nzPopconfirmTitle="确认删除？" (nzOnConfirm)="deleteRow(data.id)">删除</a>
+          </td>
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<!-- <nz-dropdown-menu #menu="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown">
+    <div class="search-box">
+      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+        Search
+      </button>
+      <button nz-button nzSize="small" (click)="reset()">Reset</button>
+    </div>
+  </div>
+</nz-dropdown-menu> -->

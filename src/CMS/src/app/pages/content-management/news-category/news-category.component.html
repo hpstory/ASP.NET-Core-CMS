@@ -1,0 +1,24 @@
+
+<h3 [ngStyle]="{ margin: '16px 0' }">资讯分类</h3>
+
+<nz-table #nzTable nzBordered [nzData]="categories" [nzShowPagination]=false [nzLoading]="loading">
+  <thead>
+    <tr>
+      <th nzWidth="30%">序号</th>
+      <th>分类</th>
+      <th>数量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of nzTable.data; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>
+        <div class="editable-cell" [hidden]="editId === data.id" (click)="startEdit(data.id)">
+          {{ data.name }}
+        </div>
+        <input [hidden]="editId !== data.id" type="text" nz-input [(ngModel)]="data.name" (blur)="stopEdit(data.id, data.name)" />
+      </td>
+      <td>{{ data.newsCount }}</td>
+    </tr>
+  </tbody>
+</nz-table>

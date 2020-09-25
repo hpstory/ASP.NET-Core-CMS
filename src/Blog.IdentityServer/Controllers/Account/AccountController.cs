@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using Blog.IdentityServer.Controllers.Account;
+using Blog.IdentityServer.Models;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using Blog.IdentityServer.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +17,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
-using Blog.IdentityServer.Controllers.Account;
 
 namespace IdentityServerHost.Quickstart.UI
 {
@@ -26,7 +28,6 @@ namespace IdentityServerHost.Quickstart.UI
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
@@ -35,7 +36,6 @@ namespace IdentityServerHost.Quickstart.UI
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
@@ -43,7 +43,6 @@ namespace IdentityServerHost.Quickstart.UI
             IEventService events)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _signInManager = signInManager;
             _interaction = interaction;
             _clientStore = clientStore;
@@ -63,7 +62,8 @@ namespace IdentityServerHost.Quickstart.UI
             if (vm.IsExternalLoginOnly)
             {
                 // we only have one option for logging in and it's an external provider
-                return RedirectToAction("Challenge", "External", new { scheme = vm.ExternalLoginScheme, returnUrl });
+                // return RedirectToAction("Challenge", "External", new { scheme = vm.ExternalLoginScheme, returnUrl });
+                return await ExternalLogin(vm.ExternalLoginScheme, returnUrl);
             }
 
             return View(vm);
@@ -108,44 +108,41 @@ namespace IdentityServerHost.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (!user.IsDeleted)
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                if (result.Succeeded)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                    var user = await _userManager.FindByNameAsync(model.Username);
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName, clientId: context?.Client.ClientId));
 
-                    if (result.Succeeded)
+                    if (context != null)
                     {
-                        await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName, clientId: context?.Client.ClientId));
+                        if (context.IsNativeClient())
+                        {
+                            // The client is native, so this change in how to
+                            // return the response is for better UX for the end user.
+                            return this.LoadingPage("Redirect", model.ReturnUrl);
+                        }
 
-                        if (context != null)
-                        {
-                            if (context.IsNativeClient())
-                            {
-                                // The client is native, so this change in how to
-                                // return the response is for better UX for the end user.
-                                return this.LoadingPage("Redirect", model.ReturnUrl);
-                            }
-
-                            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                            return Redirect(model.ReturnUrl);
-                        }
-                        // request for a local page
-                        if (Url.IsLocalUrl(model.ReturnUrl))
-                        {
-                            return Redirect(model.ReturnUrl);
-                        }
-                        else if (string.IsNullOrEmpty(model.ReturnUrl))
-                        {
-                            return Redirect("~/");
-                        }
-                        else
-                        {
-                            // user might have clicked on a malicious link - should be logged
-                            throw new Exception("invalid return URL");
-                        }
+                        // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                        return Redirect(model.ReturnUrl);
                     }
 
+                    // request for a local page
+                    if (Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
+                    else if (string.IsNullOrEmpty(model.ReturnUrl))
+                    {
+                        return Redirect("~/");
+                    }
+                    else
+                    {
+                        // user might have clicked on a malicious link - should be logged
+                        throw new Exception("invalid return URL");
+                    }
                 }
+
                 await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
@@ -155,7 +152,29 @@ namespace IdentityServerHost.Quickstart.UI
             return View(vm);
         }
 
-        
+        [HttpGet]
+        public async Task<IActionResult> ExternalLogin(string provider, string returnUrl)
+        {
+            if (AccountOptions.WindowsAuthenticationSchemeName == provider)
+            {
+                // windows authentication needs special handling
+                return await ProcessWindowsLoginAsync(returnUrl);
+            }
+            else
+            {
+                // start challenge and roundtrip the return URL and 
+                var props = new AuthenticationProperties()
+                {
+                    RedirectUri = Url.Action("ExternalLoginCallback"),
+                    Items =
+                    {
+                        { "returnUrl", returnUrl },
+                        { "scheme", provider },
+                    }
+                };
+                return Challenge(props, provider);
+            }
+        }
         /// <summary>
         /// Show logout page
         /// </summary>
@@ -347,6 +366,7 @@ namespace IdentityServerHost.Quickstart.UI
             return vm;
         }
 
+
         [HttpGet]
         [Route("account/confirm-email")]
         [AllowAnonymous]
@@ -418,5 +438,53 @@ namespace IdentityServerHost.Quickstart.UI
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
+
+        private async Task<IActionResult> ProcessWindowsLoginAsync(string returnUrl)
+        {
+            // see if windows auth has already been requested and succeeded
+            var result = await HttpContext.AuthenticateAsync(AccountOptions.WindowsAuthenticationSchemeName);
+            if (result?.Principal is WindowsPrincipal wp)
+            {
+                // we will issue the external cookie and then redirect the
+                // user back to the external callback, in essence, tresting windows
+                // auth the same as any other external authentication mechanism
+                var props = new AuthenticationProperties()
+                {
+                    RedirectUri = Url.Action("ExternalLoginCallback"),
+                    Items =
+                    {
+                        { "returnUrl", returnUrl },
+                        { "scheme", AccountOptions.WindowsAuthenticationSchemeName },
+                    }
+                };
+
+                var id = new ClaimsIdentity(AccountOptions.WindowsAuthenticationSchemeName);
+                id.AddClaim(new Claim(JwtClaimTypes.Subject, wp.Identity.Name));
+                id.AddClaim(new Claim(JwtClaimTypes.Name, wp.Identity.Name));
+
+                // add the groups as claims -- be careful if the number of groups is too large
+                if (AccountOptions.IncludeWindowsGroups)
+                {
+                    var wi = wp.Identity as WindowsIdentity;
+                    var groups = wi.Groups.Translate(typeof(NTAccount));
+                    var roles = groups.Select(x => new Claim(JwtClaimTypes.Role, x.Value));
+                    id.AddClaims(roles);
+                }
+
+                await HttpContext.SignInAsync(
+                    IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme,
+                    new ClaimsPrincipal(id),
+                    props);
+                return Redirect(props.RedirectUri);
+            }
+            else
+            {
+                // trigger windows auth
+                // since windows auth don't support the redirect uri,
+                // this URL is re-triggered when we call challenge
+                return Challenge(AccountOptions.WindowsAuthenticationSchemeName);
+            }
+        }
+
     }
 }

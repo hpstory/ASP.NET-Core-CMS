@@ -65,7 +65,11 @@ ul {
   }
 
   nz-footer {
-    padding: 0;
+    position: absolute; // 关键
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 0px;
   }
 
   .footer {

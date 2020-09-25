@@ -93,7 +93,7 @@ namespace Blog.IdentityServer.Controllers.Client
         }
 
         [HttpPost]
-        [Authorize(Policy = "SuperAdmin")]
+        [Authorize(Policy = "sadmin")]
         public async Task<ResponseMessage<string>> SaveData(ClientDto request)
         {
             if (request != null && request.Id == 0)
